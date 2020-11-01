@@ -20,6 +20,9 @@ ApplicationWindow {
       anchors.top: parent.top
       color: 'blue'
       
+      ColumnLayout
+      {
+      
       Rectangle {
         width: 120
         height: 120
@@ -29,7 +32,24 @@ ApplicationWindow {
           onClicked: { stackLayout.currentIndex = (stackLayout.currentIndex + 1) % stackLayout.count }
         }
       }
+      Rectangle {
+        width: 120
+        height: 120
+        color: 'lightgray'        
+      }
+      Rectangle {
+        width: 120
+        height: 120
+        color: zmqClient.tirette ? 'lightgray' : 'yellow'         
+      }
+      Rectangle {
+        width: 120
+        height: 120
+        color: zmqClient.emergency_stop ? 'red' : 'lightgreen'        
+      }
+      }
     }
+    
     
     StackLayout 
     {
