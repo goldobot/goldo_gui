@@ -12,6 +12,11 @@ class ZmqClient(QObject, ZmqCodecMixin):
     notifyMatchState = pyqtSignal()
     notifySide = pyqtSignal()
     
+    notifyODrive = pyqtSignal()
+    
+    notifyTirette = pyqtSignal()
+    notifyEmergencyStop = pyqtSignal()
+    
     cameraFrameReceived = pyqtSignal(object)
     cameraDetectionsReceived = pyqtSignal(object)
     
@@ -35,6 +40,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._match_timer = 0
         self._side = 0
         self._match_state = 0
+        self._odrive_state = '00'
+        self._odrive_error = False
+        self._tirette = False
+        self._emergency_stop = False
         
     @pyqtSlot()
     def configNucleo(self):
@@ -45,6 +54,11 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def preMatch(self):
         msg = Int32Value(value=0)
         self.publishTopic('gui/out/commands/prematch', msg)
+        
+    @pyqtSlot()
+    def odriveCalibration(self):
+        msg = Int32Value(value=0)
+        self.publishTopic('nucleo/in/propulsion/calibrate_odrive', msg)
         
     def publishTopic(self, topic, msg):
         self._pub_socket.send_multipart(self._encodeTopic(topic, msg))
@@ -84,6 +98,19 @@ class ZmqClient(QObject, ZmqCodecMixin):
         if topic == 'gui/in/nucleo_reset':
             self._config_status = 0
             self.notifyConfigStatus.emit()
+        if topic == 'gui/in/odrive_state':
+            self._odrive_state = msg.value
+            self.notifyODrive.emit()
+        if topic == 'gui/in/odrive_error':
+            self._odrive_error = msg.value
+            self.notifyODrive.emit()
+            
+        if topic == 'gui/in/sensors/start_match':
+            self._tirette = msg.value
+            self.notifyTirette.emit()
+        if topic == 'gui/in/sensors/emergency_stop':
+            self._emergency_stop = msg.value
+            self.notifyEmergencyStop.emit()
             
     @pyqtProperty(int, notify=notifyScore)
     def score(self):
@@ -104,6 +131,22 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(int, notify=notifyMatchTimer)
     def match_timer(self):
         return self._match_timer
+        
+    @pyqtProperty(str, notify=notifyODrive)
+    def odrive_state(self):
+        return self._odrive_state
+        
+    @pyqtProperty(bool, notify=notifyODrive)
+    def odrive_error(self):
+        return self._odrive_error
+        
+    @pyqtProperty(bool, notify=notifyTirette)
+    def tirette(self):
+        return self._tirette
+        
+    @pyqtProperty(bool, notify=notifyEmergencyStop)
+    def emergency_stop(self):
+        return self._emergency_stop
         
     def setSide(self, side):
         self._side = side
