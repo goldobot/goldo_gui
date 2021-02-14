@@ -6,12 +6,12 @@ Page {
     CameraItem {
         width:640
         height: 480
-        anchors.horizontalCenter : parent.horizontalCenter 
-        anchors.verticalCenter  : parent.verticalCenter  
+        anchors.horizontalCenter : parent.horizontalCenter
+        anchors.verticalCenter  : parent.verticalCenter
         Component.onCompleted: {
             zmqClient.cameraFrameReceived.connect(updateFrame)
-            zmqClient.cameraDetectionsReceived.connect(updateDetections)      
+            zmqClient.cameraDetectionsReceived.connect(updateDetections)
         }
     }
-}   
+}
 

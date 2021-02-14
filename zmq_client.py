@@ -44,6 +44,8 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._odrive_error = False
         self._tirette = False
         self._emergency_stop = False
+
+
         
     @pyqtSlot()
     def configNucleo(self):
@@ -103,8 +105,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self.notifyODrive.emit()
         if topic == 'gui/in/odrive_error':
             self._odrive_error = msg.value
-            self.notifyODrive.emit()
-            
+            self.notifyODrive.emit()            
         if topic == 'gui/in/sensors/start_match':
             self._tirette = msg.value
             self.notifyTirette.emit()
