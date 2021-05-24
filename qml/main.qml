@@ -6,71 +6,10 @@ import QtQuick.Layouts 1.4
 
 ApplicationWindow {
     visible: true
-    //visibility: "FullScreen"
-    //flags: Qt.FramelessWindowHint
+	  visibility: (windowed == true) ? "Windowed" : "FullScreen"
+	  flags: (windowed == true) ? null : Qt.FramelessWindowHint
     width: 800
     height: 480
-
-    /*Rectangle    
-    {
-      id: leftPanel
-      width:120
-      height:parent.height
-      anchors.left: parent.left
-      anchors.top: parent.top
-      color: 'blue'
-      
-      ColumnLayout
-      {
-      
-      Rectangle {
-        width: 120
-        height: 120
-        color: 'lightgray'        
-        MouseArea {
-          anchors.fill: parent
-          onClicked: { stackLayout.currentIndex = (stackLayout.currentIndex + 1) % stackLayout.count }
-        }
-      }
-      Rectangle {
-        width: 120
-        height: 120
-        color: 'lightgray'        
-      }
-      Rectangle {
-        width: 120
-        height: 120
-        color: zmqClient.tirette ? 'lightgray' : 'yellow'         
-      }
-      Rectangle {
-        width: 120
-        height: 120
-        color: zmqClient.emergency_stop ? 'red' : 'lightgreen'        
-      }
-      }
-    }*/
-    
-    
-    /*SwipeView 
-    {
-        id: view
-        anchors.fill: parent
-        currentIndex: 0
-        
-        MatchSetupPage { }
-        ScorePage { }
-        CameraDisplayPage { }
-    }
-
-    PageIndicator {
-      id: indicator
-
-      count: view.count
-      currentIndex: view.currentIndex
-
-      anchors.bottom: view.bottom
-      anchors.horizontalCenter: parent.horizontalCenter
-    }*/
 
     StatusBar{
       id: statusBar
@@ -81,7 +20,7 @@ ApplicationWindow {
       anchors.top: statusBar.bottom
     }
 
-    StackLayout {
+    StackLayout { 
       id: layout
       height: 440
       width: 660
@@ -105,10 +44,7 @@ ApplicationWindow {
       }
       ScorePage {        
       }
-    }
-
-
-    
+    }    
 }
 
 
