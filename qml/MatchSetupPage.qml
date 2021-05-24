@@ -94,7 +94,7 @@ Page {
                 Label {
                     color: getStatusColor(true)
                     text: "Pre-match config"
-                    font.pixelSize: 40
+                    font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -115,7 +115,7 @@ Page {
                 Label {
                     color: getSideColor(true)
                     text: "Side"
-                    font.pixelSize: 40
+                    font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -136,7 +136,7 @@ Page {
                 Label {
                     color: "black"
                     text: "ODrive calib : " + zmqClient.odrive_state
-                    font.pixelSize: 40
+                    font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -153,7 +153,7 @@ Page {
                 Label {
                     color: "black"
                     text: "PreMatch : " + zmqClient.match_state
-                    font.pixelSize: 40
+                    font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -174,7 +174,7 @@ Page {
                 Label {
                     color: "black"
                     text: "Tirette"
-                    font.pixelSize: 40
+                    font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -191,7 +191,7 @@ Page {
                 Label {
                     color: "black"
                     text: "Emergency"
-                    font.pixelSize: 40
+                    font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -212,7 +212,7 @@ Page {
       height: 80
       color: 'lightgray'
       Label {
-        font.pixelSize: 40
+        font.pixelSize: 32
         text: zmqClient.match_state
         anchors.horizontalCenter : parent.horizontalCenter 
         anchors.verticalCenter  : parent.verticalCenter        
@@ -231,7 +231,7 @@ Page {
       height: 80
       color: zmqClient.odrive_error ? 'red': 'lightgreen'
       Label {
-        font.pixelSize: 40
+        font.pixelSize: 32
         text: zmqClient.odrive_state
         anchors.horizontalCenter : parent.horizontalCenter 
         anchors.verticalCenter  : parent.verticalCenter        
