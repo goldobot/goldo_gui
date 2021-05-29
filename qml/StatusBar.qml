@@ -9,7 +9,7 @@ Item {
     height: 40
 
     function getPowerStatus(){
-        return true
+        return zmqClient.emergency_stop
     }
     function getStmStatus(){
         return true
