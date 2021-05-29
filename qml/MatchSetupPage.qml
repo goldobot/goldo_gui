@@ -142,6 +142,10 @@ Page {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                 }
+				MouseArea {
+                    anchors.fill: parent
+                    onClicked: { zmqClient.odriveCalibration() }
+                }
             }
 
             Rectangle {
@@ -158,10 +162,6 @@ Page {
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: { zmqClient.odriveCalibration() }
                 }
             }
 
@@ -201,44 +201,3 @@ Page {
         }
     }
 }
-
-/*
-    Label { 
-      text: "PreMatch"
-      font.pixelSize: 80
-    }
-    Rectangle {
-      width: 80
-      height: 80
-      color: 'lightgray'
-      Label {
-        font.pixelSize: 32
-        text: zmqClient.match_state
-        anchors.horizontalCenter : parent.horizontalCenter 
-        anchors.verticalCenter  : parent.verticalCenter        
-      }
-    MouseArea {
-          anchors.fill: parent
-          onClicked: { zmqClient.preMatch() }
-        }
-    }
-    Label { 
-      text: "ODrive calib"
-      font.pixelSize: 80
-    }
-    Rectangle {
-      width: 80
-      height: 80
-      color: zmqClient.odrive_error ? 'red': 'lightgreen'
-      Label {
-        font.pixelSize: 32
-        text: zmqClient.odrive_state
-        anchors.horizontalCenter : parent.horizontalCenter 
-        anchors.verticalCenter  : parent.verticalCenter        
-      }
-    MouseArea {
-          anchors.fill: parent
-          onClicked: { zmqClient.odriveCalibration() }
-        }
-    }
-  }*/
