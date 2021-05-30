@@ -4,8 +4,8 @@ import goldo 1.0
 
 Page {
     CameraItem {
-        width:640
-        height: 480
+        width:660
+        height: 440
         anchors.horizontalCenter : parent.horizontalCenter
         anchors.verticalCenter  : parent.verticalCenter
         Component.onCompleted: {
