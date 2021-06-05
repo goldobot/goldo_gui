@@ -76,6 +76,12 @@ class ZmqClient(QObject, ZmqCodecMixin):
         
     def _on_message_received(self, topic, msg):
         if topic == 'gui/in/heartbeat':
+            if(self._heartbeat > msg.timestamp):
+                #If heartbeat in message is lower than current,
+                #then the nucleo has been reset
+                #Reinit nucleo config status
+                self._config_status = 0
+                self.notifyConfigStatus.emit()
             self._heartbeat = msg.timestamp
             self.notifyHeartbeat.emit()
         if topic == 'gui/in/match_state':
