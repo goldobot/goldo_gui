@@ -9,7 +9,7 @@ Item {
     height: 40
 
     function getPowerStatus(){
-        return zmqClient.emergency_stop
+        return !zmqClient.emergency_stop
     }
     function getStmStatus(){
         return true
@@ -50,9 +50,10 @@ Item {
                 color: "#ff4d4d"
                 antialiasing: true
             }
+			
             Label{
                 color: "white"
-                text: zmqClient.heartbeat
+                text: zmqClient.heartbeat / 100
                 font.pixelSize: parent.height / 2
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
