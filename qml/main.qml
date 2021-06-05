@@ -23,7 +23,7 @@ ApplicationWindow {
     StackLayout { 
       id: layout
       height: 440
-      width: 660
+      width: 700
       anchors.bottom: parent.bottom
       anchors.right: parent.right
 

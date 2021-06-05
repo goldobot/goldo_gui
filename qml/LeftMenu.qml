@@ -23,7 +23,7 @@ Item {
 
     Rectangle {
         id: leftMenuBar
-        width: 140
+        width: 100
         height: 440
         color: "#424242"
 
