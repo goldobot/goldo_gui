@@ -11,8 +11,9 @@ Item {
     function getPowerStatus(){
         return !zmqClient.emergency_stop
     }
+    
     function getStmStatus(){
-        return true
+        return zmqClient.config_status == 1 && zmqClient.nucleo_responding
     }
 
     function getFPGAStatus(){
