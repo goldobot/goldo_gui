@@ -1,14 +1,14 @@
-from PyQt5.QtCore import QObject, QSocketNotifier, pyqtSignal, pyqtSlot, pyqtProperty
+from PyQt5.QtCore import QObject, QTimer, QSocketNotifier, pyqtSignal, pyqtSlot, pyqtProperty
 import zmq
 from zmq_codec import ZmqCodecMixin
 from google.protobuf.wrappers_pb2 import Int32Value
 import pb2
-import asyncio
 
 class ZmqClient(QObject, ZmqCodecMixin):
     # STM32 signals
     notifyHeartbeat = pyqtSignal()
     notifyConfigStatus = pyqtSignal()
+    notifyNucleoResponding = pyqtSignal()
 
     # Match signals
     notifySide = pyqtSignal()
@@ -27,6 +27,15 @@ class ZmqClient(QObject, ZmqCodecMixin):
     cameraFrameReceived = pyqtSignal(object)
     cameraDetectionsReceived = pyqtSignal(object)
     
+    def _nucleo_watchdog(self):
+        # If heartbeat changes, nucleo is responding
+        if self._heartbeat != self._nucleo_watchdog_last_timestamp:
+            self._nucleo_watchdog_last_timestamp = self._heartbeat
+            self._nucleo_responding = True
+        else:
+            self._nucleo_responding = False
+        self.notifyNucleoResponding.emit()
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         self._context = zmq.Context()
@@ -44,6 +53,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
         # STM variables
         self._heartbeat = 0
         self._config_status = 0
+        self._nucleo_responding = False
+        self._nucleo_watchdog_timer = QTimer(self)
+        self._nucleo_watchdog_timer.timeout.connect(self._nucleo_watchdog)
+        self._nucleo_watchdog_last_timestamp = 0
 
         # Match variables
         self._side = 0
@@ -58,8 +71,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
         #Sensors variables
         self._tirette = False
         self._emergency_stop = False
-
-
         
     @pyqtSlot()
     def configNucleo(self):
@@ -95,14 +106,19 @@ class ZmqClient(QObject, ZmqCodecMixin):
                 #If heartbeat in message is lower than current, then the nucleo has been reset
                 #Reinit nucleo config status
                 self._config_status = 0
+                self._nucleo_watchdog_timer.stop()
                 self.notifyConfigStatus.emit()
             self._heartbeat = msg.timestamp
             self.notifyHeartbeat.emit()
         if topic == 'gui/in/nucleo_config_status':
             self._config_status = msg.status + 1
+            if self._config_status == 1:
+                # Config is OK, run watchdog to monitor nucleo connection
+                self._nucleo_watchdog_timer.start(500)
             self.notifyConfigStatus.emit()
         if topic == 'gui/in/nucleo_reset':
             self._config_status = 0
+            self._nucleo_watchdog_timer.stop()
             self.notifyConfigStatus.emit()
 
         # Match messages
@@ -150,6 +166,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def config_status(self):
         return self._config_status
 
+    @pyqtProperty(bool, notify=notifyNucleoResponding)
+    def nucleo_responding(self):
+        return self._nucleo_responding
+
     # Match properties
     def setSide(self, side):
         self._side = side
@@ -190,4 +210,3 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(bool, notify=notifyEmergencyStop)
     def emergency_stop(self):
         return self._emergency_stop
-        
