@@ -3,20 +3,27 @@ import zmq
 from zmq_codec import ZmqCodecMixin
 from google.protobuf.wrappers_pb2 import Int32Value
 import pb2
+import asyncio
 
 class ZmqClient(QObject, ZmqCodecMixin):
-    notifyScore = pyqtSignal()
+    # STM32 signals
     notifyHeartbeat = pyqtSignal()
     notifyConfigStatus = pyqtSignal()
+
+    # Match signals
+    notifySide = pyqtSignal()
+    notifyScore = pyqtSignal()
     notifyMatchTimer = pyqtSignal()
     notifyMatchState = pyqtSignal()
-    notifySide = pyqtSignal()
     
+    # Odrive signals
     notifyODrive = pyqtSignal()
     
+    # Sensors signals
     notifyTirette = pyqtSignal()
     notifyEmergencyStop = pyqtSignal()
     
+    # Camera signals
     cameraFrameReceived = pyqtSignal(object)
     cameraDetectionsReceived = pyqtSignal(object)
     
@@ -34,14 +41,21 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._notifier = QSocketNotifier(self._sub_socket.getsockopt(zmq.FD), QSocketNotifier.Read, self)
         self._notifier.activated.connect(self._on_sub_socket_event)
         
-        self._config_status = 0
-        self._score = 0
+        # STM variables
         self._heartbeat = 0
-        self._match_timer = 0
+        self._config_status = 0
+
+        # Match variables
         self._side = 0
+        self._score = 0
+        self._match_timer = 0
         self._match_state = 0
+
+        # Odrive variables
         self._odrive_state = '00'
         self._odrive_error = False
+
+        #Sensors variables
         self._tirette = False
         self._emergency_stop = False
 
@@ -75,78 +89,100 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._notifier.setEnabled(True)
         
     def _on_message_received(self, topic, msg):
+        # STM messages
         if topic == 'gui/in/heartbeat':
             if(self._heartbeat > msg.timestamp):
-                #If heartbeat in message is lower than current,
-                #then the nucleo has been reset
+                #If heartbeat in message is lower than current, then the nucleo has been reset
                 #Reinit nucleo config status
                 self._config_status = 0
                 self.notifyConfigStatus.emit()
             self._heartbeat = msg.timestamp
             self.notifyHeartbeat.emit()
-        if topic == 'gui/in/match_state':
-            self._match_state = msg.value
-            self.notifyMatchState.emit()
-        if topic == 'gui/in/score':
-            self._score = msg.value
-            self.notifyScore.emit()
-        if topic == 'gui/in/side':
-            self._side = msg.value
-            self.notifySide.emit()
-        if topic == 'gui/in/match_timer':
-            self._match_timer = msg.value
-            self.notifyMatchTimer.emit()
-        if topic == 'gui/in/camera/image':
-            self.cameraFrameReceived.emit(msg)
-        if topic == 'gui/in/camera/detections':
-            self.cameraDetectionsReceived.emit(msg)
         if topic == 'gui/in/nucleo_config_status':
             self._config_status = msg.status + 1
             self.notifyConfigStatus.emit()
         if topic == 'gui/in/nucleo_reset':
             self._config_status = 0
             self.notifyConfigStatus.emit()
+
+        # Match messages
+        if topic == 'gui/in/side':
+            self._side = msg.value
+            self.notifySide.emit()
+        if topic == 'gui/in/score':
+            self._score = msg.value
+            self.notifyScore.emit()
+        if topic == 'gui/in/match_timer':
+            self._match_timer = msg.value
+            self.notifyMatchTimer.emit()
+        if topic == 'gui/in/match_state':
+            self._match_state = msg.value
+            self.notifyMatchState.emit()
+
+        # Odrive messages
         if topic == 'gui/in/odrive_state':
             self._odrive_state = msg.value
             self.notifyODrive.emit()
         if topic == 'gui/in/odrive_error':
             self._odrive_error = msg.value
-            self.notifyODrive.emit()            
+            self.notifyODrive.emit()       
+
+        # Sensors messages     
         if topic == 'gui/in/sensors/start_match':
             self._tirette = msg.value
             self.notifyTirette.emit()
         if topic == 'gui/in/sensors/emergency_stop':
             self._emergency_stop = msg.value
             self.notifyEmergencyStop.emit()
-            
-    @pyqtProperty(int, notify=notifyScore)
-    def score(self):
-        return self._score
-        
+
+        # Camera messages
+        if topic == 'gui/in/camera/image':
+            self.cameraFrameReceived.emit(msg)
+        if topic == 'gui/in/camera/detections':
+            self.cameraDetectionsReceived.emit(msg)
+
+    # STM properties
     @pyqtProperty(int, notify=notifyHeartbeat)
     def heartbeat(self):
         return self._heartbeat
-        
-    @pyqtProperty(int, notify=notifyMatchState)
-    def match_state(self):
-        return self._match_state
-        
+    
     @pyqtProperty(int, notify=notifyConfigStatus)
     def config_status(self):
         return self._config_status
-        
+
+    # Match properties
+    def setSide(self, side):
+        self._side = side
+        self.notifySide.emit()
+        msg = Int32Value(value=side)
+        self.publishTopic('gui/out/side', msg)
+
+    @pyqtProperty(int, fset=setSide, notify=notifySide)
+    def side(self):
+        return self._side
+
+    @pyqtProperty(int, notify=notifyScore)
+    def score(self):
+        return self._score
+
     @pyqtProperty(int, notify=notifyMatchTimer)
     def match_timer(self):
         return self._match_timer
         
+    @pyqtProperty(int, notify=notifyMatchState)
+    def match_state(self):
+        return self._match_state
+
+    # Odrive properties
     @pyqtProperty(str, notify=notifyODrive)
     def odrive_state(self):
         return self._odrive_state
-        
+    
     @pyqtProperty(bool, notify=notifyODrive)
     def odrive_error(self):
         return self._odrive_error
         
+    # Sensors properties
     @pyqtProperty(bool, notify=notifyTirette)
     def tirette(self):
         return self._tirette
@@ -155,12 +191,3 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def emergency_stop(self):
         return self._emergency_stop
         
-    def setSide(self, side):
-        self._side = side
-        self.notifySide.emit()
-        msg = Int32Value(value=side)
-        self.publishTopic('gui/out/side', msg)
-        
-    @pyqtProperty(int, fset=setSide, notify=notifySide)
-    def side(self):
-        return self._side
