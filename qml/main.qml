@@ -30,9 +30,7 @@ ApplicationWindow {
       currentIndex: leftMenu.getSelected()
       MatchSetupPage {          
       }
-      Rectangle {
-          color: 'plum'
-          anchors.fill: parent
+      StratPage {
       }
       Rectangle {
           color: 'cyan'
