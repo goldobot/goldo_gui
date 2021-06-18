@@ -50,6 +50,15 @@ Page {
         }
     }
 
+    function isSideUndefined(){
+        if(zmqClient.side == 0){
+            return true
+        }
+        else{
+            return false
+        }
+    }
+
     Rectangle{
         anchors.fill: parent
         color: "#222222"
@@ -63,7 +72,7 @@ Page {
 
             Rectangle {
                 id: rectangle1
-                color: "#222222"
+                color: isSideUndefined() ? "#FF0000" : "#222222"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
@@ -72,6 +81,27 @@ Page {
                 Layout.column: 0
                 Label {
                     color: "white"
+                    visible: isSideUndefined() ? true : false
+                    text: "Configuration"
+                    font.pixelSize: 64
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                }
+                Label {
+                    color: "white"
+                    visible: isSideUndefined() ? true : false
+                    text: "Warning : side is not selected"
+                    font.pixelSize: 32
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                }
+                Label {
+                    color: "white"
+                    visible: isSideUndefined() ? false : true
                     text: "Configuration"
                     font.pixelSize: 64
                     horizontalAlignment: Text.AlignHCenter
