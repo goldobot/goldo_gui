@@ -24,6 +24,15 @@ Item {
         return true
     }
 
+    function blinkHeartbeat(){
+        if(Math.floor(zmqClient.heartbeat / 100) % 5 == 0){
+            return true
+        }
+        else{
+            return false
+        }
+    }
+
     Row {
         id: row
         height: parent.height
@@ -48,13 +57,12 @@ Item {
             ColorOverlay{
                 anchors.fill: hb_icon
                 source: hb_icon
-                color: "#ff4d4d"
+                color: blinkHeartbeat() ? "#ffffff" : "#ff4d4d"
                 antialiasing: true
             }
-			
             Label{
                 color: "white"
-                text: zmqClient.heartbeat / 100
+                text: Math.floor(zmqClient.heartbeat / 100)
                 font.pixelSize: parent.height / 2
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
