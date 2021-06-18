@@ -70,7 +70,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         #Sensors variables
         self._tirette = False
-        self._emergency_stop = False
+        self._emergency_stop = True
         
     @pyqtSlot()
     def configNucleo(self):
