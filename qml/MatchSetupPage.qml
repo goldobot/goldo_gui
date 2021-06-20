@@ -59,6 +59,7 @@ Page {
         }
     }
 
+    //Title bar, also displays warnings
     Rectangle{
         anchors.fill: parent
         color: "#222222"
@@ -111,6 +112,7 @@ Page {
                 }
             }
             
+            // Config nucleo button
             Rectangle {
                 color: getStatusColor(false)
                 MouseArea {
@@ -136,6 +138,7 @@ Page {
                 }
             }
             
+            // Side button
             Rectangle {
                 color: getSideColor(false)
                 Layout.fillHeight: true
@@ -157,6 +160,7 @@ Page {
                 }
             }
 
+            // Odrive calibration button
             Rectangle {
                 color: zmqClient.odrive_error ? 'red': zmqClient.odrive_state == 11 ? 'green' : 'lightgreen'
                 Layout.fillHeight: true
@@ -178,6 +182,7 @@ Page {
                 }
             }
 
+            // Opponents number
             Rectangle {
                 color: "#333333"
                 Layout.fillHeight: true
@@ -186,15 +191,27 @@ Page {
                 Layout.rowSpan: 1
                 Label {
                     color: "black"
-                    text: "PreMatch : " + zmqClient.match_state
+                    text: "Opponents : " + zmqClient.opponents_number
                     font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                 }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if(zmqClient.opponents_number == 1){
+                            zmqClient.opponents_number = 2
+                        }
+                        else{
+                            zmqClient.opponents_number = 1
+                        }
+                    }
+                }
             }
 
+            //Tirette state
             Rectangle {
                 color: zmqClient.Tirette == 1 ? "lightgreen" : "red"
                 Layout.fillHeight: true
@@ -212,6 +229,7 @@ Page {
                 }
             }
 
+            //Emergency stop state
             Rectangle {
                 color: zmqClient.emergency_stop ? 'red' : 'lightgreen' 
                 Layout.fillHeight: true

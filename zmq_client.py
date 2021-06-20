@@ -12,6 +12,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
     # Match signals
     notifySide = pyqtSignal()
+    notifyOpponentsNumber = pyqtSignal()
     notifyScore = pyqtSignal()
     notifyMatchTimer = pyqtSignal()
     notifyMatchState = pyqtSignal()
@@ -60,6 +61,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         # Match variables
         self._side = 0
+        self._opponents_number = 1
         self._score = 0
         self._match_timer = 0
         self._match_state = 0
@@ -125,6 +127,9 @@ class ZmqClient(QObject, ZmqCodecMixin):
         if topic == 'gui/in/side':
             self._side = msg.value
             self.notifySide.emit()
+        if topic == 'gui/in/opponents_number':
+            self._opponents_number = msg.value
+            self.notifyOpponentsNumber.emit()
         if topic == 'gui/in/score':
             self._score = msg.value
             self.notifyScore.emit()
@@ -177,9 +182,19 @@ class ZmqClient(QObject, ZmqCodecMixin):
         msg = Int32Value(value=side)
         self.publishTopic('gui/out/side', msg)
 
+    def setOpponentsNumber(self, opponents_number):
+        self._opponents_number = opponents_number
+        self.notifyOpponentsNumber.emit()
+        msg = Int32Value(value=opponents_number)
+        self.publishTopic('gui/out/opponents_number', msg)
+
     @pyqtProperty(int, fset=setSide, notify=notifySide)
     def side(self):
         return self._side
+
+    @pyqtProperty(int, fset=setOpponentsNumber, notify=notifyOpponentsNumber)
+    def opponents_number(self):
+        return self._opponents_number
 
     @pyqtProperty(int, notify=notifyScore)
     def score(self):
