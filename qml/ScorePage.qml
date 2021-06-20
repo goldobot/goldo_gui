@@ -6,6 +6,11 @@ Page {
         source: "../res/Goldorak.jpg"
         anchors.fill : parent
     }
+	Rectangle {
+        color: "black"
+		opacity: 0.5
+        anchors.fill : parent
+    }
     Label {
         color : "white"
         style : Text.Outline
