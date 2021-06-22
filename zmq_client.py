@@ -102,6 +102,14 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._notifier.setEnabled(True)
         
     def _on_message_received(self, topic, msg):
+        # State message
+        if topic == 'gui/in/robot_state':
+            self._tirette = msg.sensors["tirette"]
+            self.notifyTirette.emit()
+            self._emergency_stop = msg.sensors["emergency_stop"]
+            self.notifyEmergencyStop.emit()
+            
+
         # STM messages
         if topic == 'gui/in/heartbeat':
             if(self._heartbeat > msg.timestamp):
@@ -152,9 +160,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
         if topic == 'gui/in/sensors/start_match':
             self._tirette = msg.value
             self.notifyTirette.emit()
-        if topic == 'gui/in/sensors/emergency_stop':
-            self._emergency_stop = msg.value
-            self.notifyEmergencyStop.emit()
 
         # Camera messages
         if topic == 'gui/in/camera/image':

@@ -125,7 +125,7 @@ Page {
                 Layout.rowSpan: 1
                 Label {
                     color: getStatusColor(true)
-                    text: "Pre-match config"
+                    text: "Config nucleo"
                     font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -213,7 +213,7 @@ Page {
 
             //Tirette state
             Rectangle {
-                color: zmqClient.Tirette == 1 ? "lightgreen" : "red"
+                color: !zmqClient.tirette == 1 ? "lightgreen" : "red"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 1
