@@ -24,6 +24,9 @@ class ZmqClient(QObject, ZmqCodecMixin):
     notifyTirette = pyqtSignal()
     notifyEmergencyStop = pyqtSignal()
     notifyPavillon = pyqtSignal()
+
+    # Table signals
+    notifyCompass = pyqtSignal()
     
     # Camera signals
     cameraFrameReceived = pyqtSignal(object)
@@ -71,10 +74,13 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._odrive_state = '00'
         self._odrive_error = False
 
-        #Sensors variables
+        # Sensors variables
         self._tirette = False
         self._emergency_stop = True
         self._pavillon = True
+
+        # Table variable
+        self._compass = 0
         
     @pyqtSlot()
     def configNucleo(self):
@@ -106,12 +112,17 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def _on_message_received(self, topic, msg):
         # State message
         if topic == 'gui/in/robot_state':
+            #Sensors
             self._tirette = msg.sensors["tirette"]
             self.notifyTirette.emit()
             self._emergency_stop = msg.sensors["emergency_stop"]
             self.notifyEmergencyStop.emit()
             self._pavillon = msg.sensors["switch_pavillon"]
             self.notifyPavillon.emit()
+
+            #Table
+            self._compass = msg.table.compas
+            self.notifyCompass.emit()
 
         # STM messages
         if topic == 'gui/in/heartbeat':
@@ -237,3 +248,8 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(bool, notify=notifyPavillon)
     def pavillon(self):
         return self._pavillon
+
+    # Table properties
+    @pyqtProperty(int, notify=notifyCompass)
+    def compass(self):
+        return self._compass
