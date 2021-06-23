@@ -13,11 +13,13 @@ ApplicationWindow {
 
     StatusBar{
       id: statusBar
+      z: 2
     }
 
     LeftMenu{
       id: leftMenu
       anchors.top: statusBar.bottom
+      z: 1
     }
 
     StackLayout { 
