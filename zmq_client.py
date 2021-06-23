@@ -2,7 +2,17 @@ from PyQt5.QtCore import QObject, QTimer, QSocketNotifier, pyqtSignal, pyqtSlot,
 import zmq
 from zmq_codec import ZmqCodecMixin
 from google.protobuf.wrappers_pb2 import Int32Value
-import pb2
+import pb2 as _pb2
+import google.protobuf as _pb
+_sym_db = _pb.symbol_database.Default()
+
+class RobotPose(QObject):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.x = 0
+        self.y = 0
+        self.yaw = 0
+
 
 class ZmqClient(QObject, ZmqCodecMixin):
     # STM32 signals
@@ -26,6 +36,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
     notifyPavillon = pyqtSignal()
 
     # Table signals
+    notifyRobotPose = pyqtSignal()
     notifyCompass = pyqtSignal()
     
     # Camera signals
@@ -80,6 +91,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._pavillon = True
 
         # Table variable
+        self._robot_pose = RobotPose()
         self._compass = 0
         
     @pyqtSlot()
@@ -121,6 +133,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self.notifyPavillon.emit()
 
             #Table
+            self._robot_pose.x = msg.robot_pose.position.x
+            self._robot_pose.y = msg.robot_pose.position.y
+            self._robot_pose.yaw = msg.robot_pose.position.yaw
+            self.notifyRobotPose.emit()
             self._compass = msg.table.compas
             self.notifyCompass.emit()
 
@@ -249,7 +265,23 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def pavillon(self):
         return self._pavillon
 
-    # Table properties
+     # Table properties
+    @pyqtProperty(RobotPose, notify=notifyRobotPose)
+    def robot_pose(self):
+        return self._robot_pose
+
+    @pyqtProperty(float, notify=notifyRobotPose)
+    def robot_pose_x(self):
+        return self._robot_pose.x
+
+    @pyqtProperty(float, notify=notifyRobotPose)
+    def robot_pose_y(self):
+        return self._robot_pose.y
+
+    @pyqtProperty(float, notify=notifyRobotPose)
+    def robot_pose_yaw(self):
+        return self._robot_pose.yaw
+
     @pyqtProperty(int, notify=notifyCompass)
     def compass(self):
         return self._compass

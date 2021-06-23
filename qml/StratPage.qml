@@ -57,4 +57,14 @@ Page {
         color: getCompassColor(true)
         text: getCompassText()
     }
+
+    Image {
+        id: robot_shape
+        source: "../res/robot.png"
+        width: parent.width / 12
+        height: parent.height / 12
+        x: (zmqClient.robot_pose_y + 1500) * parent.width / 3000 - width/2
+        y: zmqClient.robot_pose_x * parent.height / 2000 - height / 2
+        transform: Rotation { origin.x: robot_shape.width/2 ; origin.y: robot_shape.height/2; angle: 180 * zmqClient.robot_pose_yaw / Math.PI}
+    }
 }
