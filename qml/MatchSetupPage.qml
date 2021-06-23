@@ -3,90 +3,261 @@ import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.4
 
 Page {
-  GridLayout {
-    columns: 2
-    Label { 
-      text: "Heartbeat"
-      font.pixelSize: 20
-    }
-    Label { 
-      text: zmqClient.heartbeat
-      font.pixelSize: 20
-    }
-    Label { 
-      text: "Config Nucleo"
-      font.pixelSize: 40
-    }
-    Rectangle {
-      width: 40
-      height: 40
-      color: {0: 'lightgray', 1: 'green', 2: 'red'}[zmqClient.config_status]
-      MouseArea {
-        anchors.fill: parent
-        onClicked: { zmqClient.configNucleo() }
-      }
+    
+    function getStatusColor(textColor){
+        if(!textColor){
+            switch(zmqClient.config_status){
+                case 0:
+                    return 'lightgray'
+                case 1:
+                    return 'green'
+                case 2:
+                    return 'red'
+            }
+        }
+        else{
+            switch(zmqClient.config_status){
+                case 0:
+                    return 'black'
+                case 1:
+                    return 'white'
+                case 2:
+                    return 'white'
+            }
+        }
     }
     
-    Label { 
-      text: "Side"
-      font.pixelSize: 80
+    function getSideColor(textColor){
+        if(!textColor){
+            switch(zmqClient.side){
+                case 0:
+                    return 'gray'
+                case 1:
+                    return 'blue'
+                case 2:
+                    return 'yellow'
+            }
+        }
+        else {
+            switch(zmqClient.side){
+                case 0:
+                    return 'black'
+                case 1:
+                    return 'white'
+                case 2:
+                    return 'black'
+            }
+        }
     }
-    Rectangle {
-        width: 80
-        height: 80
-        color: 'lightgray'
-        Rectangle {
-          id: selectSide
-          height:70
-          width: 70
-          anchors.horizontalCenter : parent.horizontalCenter 
-          anchors.verticalCenter  : parent.verticalCenter  
-          color: {0: 'gray', 1: 'blue', 2: 'yellow'}[zmqClient.side]
-          MouseArea {
+
+    function isSideUndefined(){
+        if(zmqClient.side == 0){
+            return true
+        }
+        else{
+            return false
+        }
+    }
+
+    //Title bar, also displays warnings
+    Rectangle{
+        anchors.fill: parent
+        color: "#222222"
+        GridLayout {
+            id: gridLayout
             anchors.fill: parent
-            onClicked: { zmqClient.side = (zmqClient.side + 1) % 3 }
-          }
+            columnSpacing: 5
+            rowSpacing: 5
+            rows: 6
+            columns: 2
+
+            Rectangle {
+                id: rectangle1
+                color: isSideUndefined() || zmqClient.pavillon ? "#FF0000" : "#222222"
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                Layout.rowSpan: 1
+                Layout.row: 0
+                Layout.column: 0
+                Label {
+                    color: "white"
+                    visible: isSideUndefined() || !zmqClient.pavillon == false ? true : false
+                    text: "Configuration"
+                    font.pixelSize: 44
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                }
+                Label {
+                    id: warningSide
+                    color: "white"
+                    visible: isSideUndefined() ? true : false
+                    text: "Warning : side is not selected"
+                    font.pixelSize: 24
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                }
+                Label {
+                    id: warningPavillon
+                    color: "white"
+                    visible: !zmqClient.pavillon == false ? true : false
+                    text: "Warning : Flag is not closed"
+                    font.pixelSize: 24
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: warningSide.top
+                }
+                Label {
+                    color: "white"
+                    visible: isSideUndefined() || zmqClient.pavillon ? false : true
+                    text: "Configuration"
+                    font.pixelSize: 64
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+            
+            // Config nucleo button
+            Rectangle {
+                color: getStatusColor(false)
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: { zmqClient.configNucleo() }
+                }
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.columnSpan: 1
+                Layout.rowSpan: 1
+                Label {
+                    color: getStatusColor(true)
+                    text: "Config nucleo"
+                    font.pixelSize: 32
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: { zmqClient.configNucleo() }
+                }
+            }
+            
+            // Side button
+            Rectangle {
+                color: getSideColor(false)
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.columnSpan: 1
+                Layout.rowSpan: 1
+                Label {
+                    color: getSideColor(true)
+                    text: "Side"
+                    font.pixelSize: 32
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: { zmqClient.side = (zmqClient.side + 1) % 3 }
+                }
+            }
+
+            // Odrive calibration button
+            Rectangle {
+                color: zmqClient.odrive_error ? 'red': zmqClient.odrive_state == 11 ? 'green' : 'lightgreen'
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.columnSpan: 1
+                Layout.rowSpan: 1
+                Label {
+                    color: "black"
+                    text: "ODrive calib : " + zmqClient.odrive_state
+                    font.pixelSize: 32
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+				MouseArea {
+                    anchors.fill: parent
+                    onClicked: { zmqClient.odriveCalibration() }
+                }
+            }
+
+            // Opponents number
+            Rectangle {
+                color: "#333333"
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.columnSpan: 1
+                Layout.rowSpan: 1
+                Label {
+                    color: "black"
+                    text: "Opponents : " + zmqClient.opponents_number
+                    font.pixelSize: 32
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if(zmqClient.opponents_number == 1){
+                            zmqClient.opponents_number = 2
+                        }
+                        else{
+                            zmqClient.opponents_number = 1
+                        }
+                    }
+                }
+            }
+
+            //Tirette state
+            Rectangle {
+                color: !zmqClient.tirette == 1 ? "lightgreen" : "red"
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.columnSpan: 1
+                Layout.rowSpan: 1
+                Label {
+                    color: "black"
+                    text: "Tirette"
+                    font.pixelSize: 32
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+
+            //Emergency stop state
+            Rectangle {
+                color: zmqClient.emergency_stop ? 'red' : 'lightgreen' 
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.columnSpan: 1
+                Layout.rowSpan: 1
+                Label {
+                    color: "black"
+                    text: "Emergency"
+                    font.pixelSize: 32
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
         }
-      }
-    Label { 
-      text: "PreMatch"
-      font.pixelSize: 80
     }
-    Rectangle {
-      width: 80
-      height: 80
-      color: 'lightgray'
-      Label {
-        font.pixelSize: 40
-        text: zmqClient.match_state
-        anchors.horizontalCenter : parent.horizontalCenter 
-        anchors.verticalCenter  : parent.verticalCenter        
-      }
-    MouseArea {
-          anchors.fill: parent
-          onClicked: { zmqClient.preMatch() }
-        }
-    }
-    Label { 
-      text: "ODrive calib"
-      font.pixelSize: 80
-    }
-    Rectangle {
-      width: 80
-      height: 80
-      color: zmqClient.odrive_error ? 'red': 'lightgreen'
-      Label {
-        font.pixelSize: 40
-        text: zmqClient.odrive_state
-        anchors.horizontalCenter : parent.horizontalCenter 
-        anchors.verticalCenter  : parent.verticalCenter        
-      }
-    MouseArea {
-          anchors.fill: parent
-          onClicked: { zmqClient.odriveCalibration() }
-        }
-    }
-  }
 }
- 
- 
