@@ -23,6 +23,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
     # Sensors signals
     notifyTirette = pyqtSignal()
     notifyEmergencyStop = pyqtSignal()
+    notifyPavillon = pyqtSignal()
     
     # Camera signals
     cameraFrameReceived = pyqtSignal(object)
@@ -73,6 +74,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
         #Sensors variables
         self._tirette = False
         self._emergency_stop = True
+        self._pavillon = True
         
     @pyqtSlot()
     def configNucleo(self):
@@ -108,7 +110,8 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self.notifyTirette.emit()
             self._emergency_stop = msg.sensors["emergency_stop"]
             self.notifyEmergencyStop.emit()
-            
+            self._pavillon = msg.sensors["switch_pavillon"]
+            self.notifyPavillon.emit()
 
         # STM messages
         if topic == 'gui/in/heartbeat':
@@ -230,3 +233,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(bool, notify=notifyEmergencyStop)
     def emergency_stop(self):
         return self._emergency_stop
+
+    @pyqtProperty(bool, notify=notifyPavillon)
+    def pavillon(self):
+        return self._pavillon

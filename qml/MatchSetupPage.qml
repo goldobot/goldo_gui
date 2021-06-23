@@ -73,7 +73,7 @@ Page {
 
             Rectangle {
                 id: rectangle1
-                color: isSideUndefined() ? "#FF0000" : "#222222"
+                color: isSideUndefined() || zmqClient.pavillon ? "#FF0000" : "#222222"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
@@ -82,27 +82,39 @@ Page {
                 Layout.column: 0
                 Label {
                     color: "white"
-                    visible: isSideUndefined() ? true : false
+                    visible: isSideUndefined() || !zmqClient.pavillon == false ? true : false
                     text: "Configuration"
-                    font.pixelSize: 64
+                    font.pixelSize: 44
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: parent.top
                 }
                 Label {
+                    id: warningSide
                     color: "white"
                     visible: isSideUndefined() ? true : false
                     text: "Warning : side is not selected"
-                    font.pixelSize: 32
+                    font.pixelSize: 24
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                 }
                 Label {
+                    id: warningPavillon
                     color: "white"
-                    visible: isSideUndefined() ? false : true
+                    visible: !zmqClient.pavillon == false ? true : false
+                    text: "Warning : Flag is not closed"
+                    font.pixelSize: 24
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: warningSide.top
+                }
+                Label {
+                    color: "white"
+                    visible: isSideUndefined() || zmqClient.pavillon ? false : true
                     text: "Configuration"
                     font.pixelSize: 64
                     horizontalAlignment: Text.AlignHCenter
