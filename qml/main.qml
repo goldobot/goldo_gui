@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.4
 ApplicationWindow {
     visible: true
 	  visibility: (windowed == true) ? "Windowed" : "FullScreen"
-	  flags: (windowed == true) ? null : Qt.FramelessWindowHint
+	  flags: (windowed == true) ? Qt.Window : Qt.FramelessWindowHint
     width: 800
     height: 480
 
@@ -22,8 +22,8 @@ ApplicationWindow {
 
     StackLayout { 
       id: layout
-      height: 440
-      width: 700
+      height: parent.height - statusBar.height
+      width: parent.width - leftMenu.width
       anchors.bottom: parent.bottom
       anchors.right: parent.right
 
@@ -34,7 +34,8 @@ ApplicationWindow {
       }
       Rectangle {
           color: 'cyan'
-          anchors.fill: parent
+          height: parent.height
+          width: parent.width
       }
       CupDisplayPage {
       }
