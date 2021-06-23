@@ -4,6 +4,8 @@ import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.4
 
 Item {
+    width: parent.width / 8
+    height: parent.height - (parent.height/ 12)
     property var selected: 0
 
     function isSelected(number){
@@ -23,8 +25,8 @@ Item {
 
     Rectangle {
         id: leftMenuBar
-        width: 100
-        height: 440
+        width: parent.width
+        height: parent.height
         color: "#424242"
 
         Column {
@@ -37,8 +39,6 @@ Item {
                 id: match_button
                 height: leftMenuBar.height / 6
                 width: leftMenuBar.width
-                anchors.top: parent.top
-                
                 color: isSelected(0) ? "#ff1a1a" : "#424242"
 
                 Label{
@@ -60,9 +60,7 @@ Item {
             Rectangle {
                 id: strat_button
                 height: leftMenuBar.height / 6
-                width: leftMenuBar.width
-                anchors.top: match_button.bottom
-                
+                width: leftMenuBar.width                
                 color: isSelected(1) ? "#ff1a1a" : "#424242"
 
                 Label{
@@ -84,9 +82,7 @@ Item {
             Rectangle {
                 id: control_button
                 height: leftMenuBar.height / 6
-                width: leftMenuBar.width
-                anchors.top: strat_button.bottom
-                
+                width: leftMenuBar.width                
                 color: isSelected(2) ? "#ff1a1a" : "#424242"
 
                 Label{
@@ -109,8 +105,6 @@ Item {
                 id: status_button
                 height: leftMenuBar.height / 6
                 width: leftMenuBar.width
-                anchors.top: control_button.bottom
-                
                 color: isSelected(3) ? "#ff1a1a" : "#424242"
 
                 Label{
@@ -133,8 +127,6 @@ Item {
                 id: vision_button
                 height: leftMenuBar.height / 6
                 width: leftMenuBar.width
-                anchors.top: status_button.bottom
-                
                 color: isSelected(4) ? "#ff1a1a" : "#424242"
 
                 Label{
@@ -157,8 +149,6 @@ Item {
                 id: score_button
                 height: leftMenuBar.height / 6
                 width: leftMenuBar.width
-                anchors.top: vision_button.bottom
-                
                 color: isSelected(5) ? "#ff1a1a" : "#424242"
 
                 Label{
