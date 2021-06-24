@@ -135,7 +135,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
             #Table
             self._robot_pose.x = msg.robot_pose.position.x
             self._robot_pose.y = msg.robot_pose.position.y
-            self._robot_pose.yaw = msg.robot_pose.position.yaw
+            self._robot_pose.yaw = msg.robot_pose.yaw
             self.notifyRobotPose.emit()
             self._compass = msg.table.compas
             self.notifyCompass.emit()
