@@ -151,12 +151,33 @@ Item {
                 width: leftMenuBar.width
                 color: isSelected(5) ? "#ff1a1a" : "#424242"
 
-                Label{
-                    color: "white"
-                    text: "Score"
-                    font.pixelSize: (leftMenuBar.width / 6) * 0.8
+                Column{
+                    //height: parent.height
+                    width: parent.width
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    
+                    Label{
+                        id: score_button_label
+                        color: "white"
+                        text: "Score"
+                        font.pixelSize: (leftMenuBar.width / 6) * 0.8
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                    Image{
+                        id: star_icon
+                        source: "../res/points.png"
+                        height: 20
+                        width: 20
+                        antialiasing: true
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                    Label{
+                        color: "white"
+                        text: zmqClient.score
+                        font.pixelSize: (leftMenuBar.width / 6) * 0.8
+                        anchors.leftMargin: 2 * star_icon.width
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
                 }
 
                 MouseArea {

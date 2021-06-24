@@ -47,29 +47,6 @@ Item {
             height: parent.height
             spacing: 2
 
-            // Display score in case score screen fails
-            Item {
-                height: parent.height
-                width: statusBar.width / 10
-                Image{
-                    source: "../res/points.png"
-                    height: parent.height * 0.8
-                    width: height
-                    anchors.leftMargin: parent.height / 10
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    antialiasing: true
-                }
-                Label{
-                    color: "white"
-                    text: zmqClient.score
-                    font.pixelSize: parent.height / 2
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: parent.height / 10
-                }
-            }
-
             // Separator
             Rectangle{
                 height: parent.height
