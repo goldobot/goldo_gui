@@ -96,7 +96,7 @@ Item {
             Item {
                 id: power_column
                 height: parent.height
-                width: statusBar.width / 9
+                width: statusBar.height * 2
                 Image{
                     id: power_icon
                     source: "../res/power.svg"
@@ -134,11 +134,18 @@ Item {
                 }
             }
 
+            // Separator
+            Rectangle{
+                height: parent.height
+                width: 2
+                color: "#484848"
+            }
+
             // STM status display
             Item {
                 id: stm_column
                 height: parent.height
-                width: statusBar.width / 9
+                width: statusBar.height * 2
                 Image{
                     id: stm_icon
                     source: "../res/stm.png"
@@ -176,10 +183,17 @@ Item {
                 }
             }
 
+            // Separator
+            Rectangle{
+                height: parent.height
+                width: 2
+                color: "#484848"
+            }
+
             Item {
                 id: fpga_column
                 height: parent.height
-                width: statusBar.width / 9
+                width: statusBar.height * 2
                 Image{
                     id: fpga_icon
                     source: "../res/fpga.png"
@@ -217,10 +231,17 @@ Item {
                 }
             }
 
+            // Separator
+            Rectangle{
+                height: parent.height
+                width: 2
+                color: "#484848"
+            }
+
             Item {
                 id: odrv_column
                 height: parent.height
-                width: statusBar.width / 9
+                width: statusBar.height * 2
                 Image{
                     id: odrv_icon
                     source: "../res/odrv.png"
@@ -258,10 +279,17 @@ Item {
                 }
             }
 
+            // Separator
+            Rectangle{
+                height: parent.height
+                width: 2
+                color: "#484848"
+            }
+
             Item {
                 id: lidar_column
                 height: parent.height
-                width: statusBar.width / 9
+                width: statusBar.height * 2
                 Image{
                     id: lidar_icon
                     source: "../res/lidar.svg"
@@ -304,13 +332,6 @@ Item {
                 height: parent.height
                 width: 2
                 color: "#484848"
-            }
-
-            Label{
-                color: "white"
-                text: "192.168.0.211"
-                font.pixelSize: parent.height / 2
-                anchors.verticalCenter: parent.verticalCenter
             }
         }
     }
