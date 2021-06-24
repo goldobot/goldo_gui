@@ -9,7 +9,7 @@ Item {
     height: parent.height / 12
 
     function getPowerStatus(){
-        return !zmqClient.emergency_stop
+        return !zmqClient.emergency_stop && zmqClient.config_status == 1
     }
     
     function getStmStatus(){
