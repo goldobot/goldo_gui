@@ -1,9 +1,9 @@
 import QtQuick 2.4
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.4
+import QtQml.Models 2.15
 
 Page {
-
     function getCompassColor(textColor){
         if(!textColor){
             switch(zmqClient.compass){
@@ -65,6 +65,26 @@ Page {
         height: parent.height / 12
         x: (zmqClient.robot_pose_y + 1500) * parent.width / 3000 - width/2
         y: zmqClient.robot_pose_x * parent.height / 2000 - height / 2
-        transform: Rotation { origin.x: robot_shape.width/2 ; origin.y: robot_shape.height/2; angle: 180 * zmqClient.robot_pose_yaw / Math.PI}
+        transform: Rotation { origin.x: robot_shape.width/2 ; origin.y: robot_shape.height/2; angle: 180 + 180 * zmqClient.robot_pose_yaw / Math.PI}
+    }
+
+    Repeater{
+        model: zmqClient.robot_detection
+        Rectangle{
+            width: parent.width/12
+            height: width
+            radius: width / 2
+            color: "lavender"
+            visible: modelData.quality == 0 ? false : true
+            x: (modelData.y + 1500) * parent.width / 3000 - width/2
+            y: modelData.x * parent.height / 2000 - height / 2
+            Label {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pixelSize: parent.height / 2
+                color: "black"
+                text: modelData.quality
+            }
+        }
     }
 }

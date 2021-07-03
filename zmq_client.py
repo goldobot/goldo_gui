@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QObject, QTimer, QSocketNotifier, pyqtSignal, pyqtSlot, pyqtProperty
+from PyQt5.QtQml import QQmlListProperty
 import zmq
 from zmq_codec import ZmqCodecMixin
 from google.protobuf.wrappers_pb2 import Int32Value
@@ -9,10 +10,40 @@ _sym_db = _pb.symbol_database.Default()
 class RobotPose(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.x = 0
-        self.y = 0
-        self.yaw = 0
+        self._x = 0
+        self._y = 0
+        self._yaw = 0
 
+    @pyqtProperty(float)
+    def x(self):
+        return self._x
+
+    @pyqtProperty(float)
+    def y(self):
+        return self._y
+
+    @pyqtProperty(float)
+    def yaw(self):
+        return self._yaw
+
+class RobotDetection(QObject):
+    def __init__(self, cx, cy, cquality, parent=None):
+        super().__init__(parent)
+        self._x = cx
+        self._y = cy
+        self._quality = cquality
+
+    @pyqtProperty(float, constant=True)
+    def x(self):
+        return self._x
+
+    @pyqtProperty(float, constant=True)
+    def y(self):
+        return self._y
+
+    @pyqtProperty(int, constant=True)
+    def quality(self):
+        return self._quality
 
 class ZmqClient(QObject, ZmqCodecMixin):
     # STM32 signals
@@ -37,6 +68,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
     # Table signals
     notifyRobotPose = pyqtSignal()
+    notifyRobotDetect = pyqtSignal()
     notifyCompass = pyqtSignal()
     
     # Camera signals
@@ -92,6 +124,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         # Table variable
         self._robot_pose = RobotPose()
+        self._robot_pose._x = 400
+        self._robot_pose._y = -600
+        self._robot_pose._yaw = 0.2
+        self._robot_detection = []
         self._compass = 0
         
     @pyqtSlot()
@@ -133,10 +169,18 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self.notifyPavillon.emit()
 
             #Table
-            self._robot_pose.x = msg.robot_pose.position.x
-            self._robot_pose.y = msg.robot_pose.position.y
-            self._robot_pose.yaw = msg.robot_pose.yaw
+            self._robot_pose._x = msg.robot_pose.position.x
+            self._robot_pose._y = msg.robot_pose.position.y
+            self._robot_pose._yaw = msg.robot_pose.yaw
             self.notifyRobotPose.emit()
+
+            #Lidar detection
+            self._robot_detection = []
+            for detection in msg.rplidar_detections:
+                _detect = RobotDetection(detection.x, detection.y, detection.detect_quality)
+                self._robot_detection.append(_detect)
+            self.notifyRobotDetect.emit()
+
             self._compass = msg.table.compas
             self.notifyCompass.emit()
 
@@ -281,6 +325,22 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(float, notify=notifyRobotPose)
     def robot_pose_yaw(self):
         return self._robot_pose.yaw
+
+    @pyqtProperty(QQmlListProperty, notify=notifyRobotDetect)
+    def robot_detection(self):
+        return QQmlListProperty(RobotDetection, self, self._robot_detection)
+
+    @pyqtProperty(RobotDetection, notify=notifyRobotDetect)
+    def robot_detection1(self):
+        return self._robot_detection[0]
+
+    @pyqtProperty(RobotDetection, notify=notifyRobotDetect)
+    def robot_detection2(self):
+        return self._robot_detection[1]
+    
+    @pyqtProperty(RobotDetection, notify=notifyRobotDetect)
+    def robot_detection3(self):
+        return self._robot_detection[2]
 
     @pyqtProperty(int, notify=notifyCompass)
     def compass(self):
