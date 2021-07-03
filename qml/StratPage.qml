@@ -63,8 +63,8 @@ Page {
         source: "../res/robot.png"
         width: parent.width / 12
         height: parent.height / 12
-        x: (zmqClient.robot_pose_y + 1500) * parent.width / 3000 - width/2
-        y: zmqClient.robot_pose_x * parent.height / 2000 - height / 2
+        x: (zmqClient.robot_pose_y + 1.500) * parent.width / 3.000 - width/2
+        y: zmqClient.robot_pose_x * parent.height / 2.000 - height / 2
         transform: Rotation { origin.x: robot_shape.width/2 ; origin.y: robot_shape.height/2; angle: 180 + 180 * zmqClient.robot_pose_yaw / Math.PI}
     }
 
@@ -76,8 +76,8 @@ Page {
             radius: width / 2
             color: "lavender"
             visible: modelData.quality == 0 ? false : true
-            x: (modelData.y + 1500) * parent.width / 3000 - width/2
-            y: modelData.x * parent.height / 2000 - height / 2
+            x: (modelData.y + 1.500) * parent.width / 3.000 - width/2
+            y: modelData.x * parent.height / 2.000 - height / 2
             Label {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter

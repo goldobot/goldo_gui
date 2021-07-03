@@ -124,8 +124,8 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         # Table variable
         self._robot_pose = RobotPose()
-        self._robot_pose._x = 400
-        self._robot_pose._y = -600
+        self._robot_pose._x = 0.400
+        self._robot_pose._y = -0.600
         self._robot_pose._yaw = 0.2
         self._robot_detection = []
         self._compass = 0
