@@ -101,8 +101,8 @@ class ZmqClient(QObject, ZmqCodecMixin):
         
     @pyqtSlot()
     def preMatch(self):
-        msg = Int32Value(value=0)
-        self.publishTopic('gui/out/commands/prematch', msg)
+        msg = _sym_db.GetSymbol('google.protobuf.Empty')()
+        self.publishTopic('robot/sequence/prematch/execute', msg)
         
     @pyqtSlot()
     def odriveCalibration(self):

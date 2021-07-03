@@ -196,7 +196,7 @@ Page {
 
             // Opponents number
             Rectangle {
-                color: "#333333"
+                color: "#888888"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 1
@@ -223,6 +223,30 @@ Page {
                 }
             }
 
+            //Pre-match sequence
+            Rectangle {
+                color: "#888888"
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.columnSpan: 1
+                Layout.rowSpan: 1
+                Label {
+                    color: "black"
+                    text: "Pre-match sequence"
+                    font.pixelSize: 32
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        onClicked: { zmqClient.preMatch() }
+                    }
+                }
+            }
+
             //Tirette state
             Rectangle {
                 color: !zmqClient.tirette == 1 ? "lightgreen" : "red"
@@ -233,24 +257,6 @@ Page {
                 Label {
                     color: "black"
                     text: "Tirette"
-                    font.pixelSize: 32
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
-
-            //Emergency stop state
-            Rectangle {
-                color: zmqClient.emergency_stop ? 'red' : 'lightgreen' 
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.columnSpan: 1
-                Layout.rowSpan: 1
-                Label {
-                    color: "black"
-                    text: "Emergency"
                     font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
