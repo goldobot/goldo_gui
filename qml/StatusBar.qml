@@ -28,6 +28,11 @@ Item {
         return true
     }
 
+    function getVisionStatus(){
+        _cam = os.system("systemctl --user is-active --quiet robot_camera")
+        return _cam == 0 ? True : False
+    }
+
     function blinkHeartbeat(){
         if(Math.floor(zmqClient.heartbeat / 100) % 5 == 0){
             return true
@@ -292,18 +297,11 @@ Item {
                 width: statusBar.height * 2
                 Image{
                     id: lidar_icon
-                    source: "../res/lidar.svg"
+                    source: "../res/lidar.png"
                     height: parent.height * 0.8
                     width: height
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    antialiasing: true
-                    visible: false
-                }
-                ColorOverlay{
-                    anchors.fill: lidar_icon
-                    source: lidar_icon
-                    color: "red"
                     antialiasing: true
                 }
                 Image{
@@ -332,6 +330,46 @@ Item {
                 height: parent.height
                 width: 2
                 color: "#484848"
+            }
+
+            Item {
+                id: vision_column
+                height: parent.height
+                width: statusBar.height * 2
+                Image{
+                    id: vision_icon
+                    source: "../res/vision.svg"
+                    height: parent.height * 0.8
+                    width: height
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    antialiasing: true
+                }
+                ColorOverlay{
+                    anchors.fill: vision_icon
+                    source: vision_icon
+                    color: "red"
+                    antialiasing: true
+                }
+                Image{
+                    id: vision_status_icon
+                    source: getVisionStatus() ? "../res/tick.svg" : "../res/cross.svg"
+                    height: parent.height * 0.8
+                    width: height
+                    anchors.leftMargin: parent.height / 4
+                    anchors.left: vision_icon.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    antialiasing: true
+                    visible: false
+                }
+                ColorOverlay{
+                    id: vision_status_overlay
+                    anchors.fill: vision_status_icon
+                    source: vision_status_icon
+                    color: getVisionStatus() ? "#40bf80" : "#ff4d4d";
+                    antialiasing: true
+                    visible: true
+                }
             }
         }
     }
