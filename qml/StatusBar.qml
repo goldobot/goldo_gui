@@ -30,7 +30,7 @@ Item {
 
     function getVisionStatus(){
         _cam = os.system("systemctl --user is-active --quiet robot_camera")
-        return _cam == 0 ? True : False
+        return _cam == 0 ? true : false
     }
 
     function blinkHeartbeat(){
