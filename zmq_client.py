@@ -45,6 +45,30 @@ class RobotDetection(QObject):
     def quality(self):
         return self._quality
 
+    @pyqtProperty(int, constant=True)
+    def axis(self):
+        return self._axis
+
+    @pyqtProperty(int, constant=True)
+    def motor(self):
+        return self._motor
+
+    @pyqtProperty(int, constant=True)
+    def controller(self):
+        return self._controller
+
+    @pyqtProperty(int, constant=True)
+    def encoder(self):
+        return self._encoder
+
+    @pyqtProperty(int, constant=True)
+    def sensorless(self):
+        return self._sensorless
+    
+    @pyqtProperty(bool, constant=True)
+    def is_in_error(self):
+        return self._is_in_error
+
 class ZmqClient(QObject, ZmqCodecMixin):
     # STM32 signals
     notifyHeartbeat = pyqtSignal()
@@ -114,8 +138,11 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._match_state = 0
 
         # Odrive variables
-        self._odrive_state = '00'
-        self._odrive_error = False
+        self._odrv_sync = False
+        self._odrv_axis0_state = 0
+        self._odrv_axis1_state = 0
+        self._odrv_axis0_error = False
+        self._odrv_axis1_error = False
 
         # Sensors variables
         self._tirette = False
@@ -167,6 +194,33 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self.notifyEmergencyStop.emit()
             self._pavillon = msg.sensors["switch_pavillon"]
             self.notifyPavillon.emit()
+
+            #Odrv
+            self._odrv_sync = msg.nucleo.odrive.synchronized
+            self._odrv_axis0_state = msg.nucleo.odrive.axis0.current_state
+            self._odrv_axis1_state = msg.nucleo.odrive.axis1.current_state
+
+            if msg.nucleo.odrive.axis0.errors.axis != 0:
+                self._odrv_axis0_error = True
+            elif msg.nucleo.odrive.axis0.errors.motor != 0:
+                self._odrv_axis0_error = True
+            elif msg.nucleo.odrive.axis0.errors.controller != 0:
+                self._odrv_axis0_error = True
+            elif msg.nucleo.odrive.axis0.errors.encoder != 0:
+                self._odrv_axis0_error = True
+            else:
+                self._odrv_axis0_error = False
+
+            if msg.nucleo.odrive.axis1.errors.axis != 0:
+                self._odrv_axis1_error = True
+            elif msg.nucleo.odrive.axis1.errors.motor != 0:
+                self._odrv_axis1_error = True
+            elif msg.nucleo.odrive.axis1.errors.controller != 0:
+                self._odrv_axis1_error = True
+            elif msg.nucleo.odrive.axis1.errors.encoder != 0:
+                self._odrv_axis1_error = True
+            else:
+                self._odrv_axis1_error = False
 
             #Table
             self._robot_pose._x = msg.robot_pose.position.x
@@ -221,14 +275,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
         if topic == 'gui/in/match_state':
             self._match_state = msg.value
             self.notifyMatchState.emit()
-
-        # Odrive messages
-        if topic == 'gui/in/odrive_state':
-            self._odrive_state = msg.value
-            self.notifyODrive.emit()
-        if topic == 'gui/in/odrive_error':
-            self._odrive_error = msg.value
-            self.notifyODrive.emit()       
 
         # Sensors messages     
         if topic == 'gui/in/sensors/start_match':
@@ -288,14 +334,26 @@ class ZmqClient(QObject, ZmqCodecMixin):
         return self._match_state
 
     # Odrive properties
-    @pyqtProperty(str, notify=notifyODrive)
-    def odrive_state(self):
-        return self._odrive_state
-    
     @pyqtProperty(bool, notify=notifyODrive)
-    def odrive_error(self):
-        return self._odrive_error
+    def odrv_sync(self):
+        return self._odrv_sync
+
+    @pyqtProperty(int, notify=notifyODrive)
+    def odrv_axis0_state(self):
+        return self._odrv_axis0_state
+
+    @pyqtProperty(int, notify=notifyODrive)
+    def odrv_axis1_state(self):
+        return self._odrv_axis0_state
+
+    @pyqtProperty(bool, notify=notifyODrive)
+    def odrv_axis0_error(self):
+        return self._odrv_axis0_error
         
+    @pyqtProperty(bool, notify=notifyODrive)
+    def odrv_axis1_error(self):
+        return self._odrv_axis1_error
+
     # Sensors properties
     @pyqtProperty(bool, notify=notifyTirette)
     def tirette(self):

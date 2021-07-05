@@ -25,12 +25,11 @@ Item {
     }
 
     function getOdrvStatus(){
-        return true
+        return zmqClient.odrv_sync && !zmqClient.odrv_axis0_error && !zmqClient.odrv_axis1_error
     }
 
     function getVisionStatus(){
-        _cam = os.system("systemctl --user is-active --quiet robot_camera")
-        return _cam == 0 ? true : false
+        return true
     }
 
     function blinkHeartbeat(){

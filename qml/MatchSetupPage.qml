@@ -50,6 +50,31 @@ Page {
         }
     }
 
+    function getOdrvColor(textColor){
+        if(!textColor){
+            if(zmqClient.odrv_axis0_error || zmqClient.odrv_axis1_error || !zmqClient.odrv_sync){
+                return 'red'
+            }
+            else if(zmqClient.odrv_axis0_state == 0 || zmqClient.odrv_axis1_state == 0){
+                return 'lightgreen'
+            }
+            else{
+                return 'green'
+            }
+        }
+        else {
+            if(zmqClient.odrv_axis0_error || zmqClient.odrv_axis1_error || !zmqClient.odrv_sync){
+                return 'white'
+            }
+            else if(zmqClient.odrv_axis0_state == 0 || zmqClient.odrv_axis1_state == 0){
+                return 'black'
+            }
+            else{
+                return 'white'
+            }
+        }
+    }
+
     function isSideUndefined(){
         if(zmqClient.side == 0){
             return true
@@ -174,14 +199,14 @@ Page {
 
             // Odrive calibration button
             Rectangle {
-                color: zmqClient.odrive_error ? 'red': zmqClient.odrive_state == 11 ? 'green' : 'lightgreen'
+                color: getOdrvColor(false)
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 1
                 Layout.rowSpan: 1
                 Label {
-                    color: "black"
-                    text: "ODrive calib : " + zmqClient.odrive_state
+                    color: getOdrvColor(true)
+                    text: "ODrive : " + zmqClient.odrv_axis0_state + " | " + zmqClient.odrv_axis1_state
                     font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
