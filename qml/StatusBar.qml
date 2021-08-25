@@ -21,11 +21,11 @@ Item {
     }
 
     function getLidarStatus(){
-        return true
+        return zmqClient.rplidar_running
     }
 
     function getOdrvStatus(){
-        return zmqClient.odrv_sync && !zmqClient.odrv_axis0_error && !zmqClient.odrv_axis1_error
+        return getStmStatus() && !zmqClient.odrv_axis0_error && !zmqClient.odrv_axis1_error
     }
 
     function getVisionStatus(){

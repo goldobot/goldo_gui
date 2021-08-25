@@ -88,16 +88,22 @@ class ZmqClient(QObject, ZmqCodecMixin):
     # Sensors signals
     notifyTirette = pyqtSignal()
     notifyEmergencyStop = pyqtSignal()
-    notifyPavillon = pyqtSignal()
+    notifySensors = pyqtSignal()
 
     # Table signals
     notifyRobotPose = pyqtSignal()
     notifyRobotDetect = pyqtSignal()
     notifyCompass = pyqtSignal()
+
+    # RPLidar signals
+    notifyRPLidar = pyqtSignal()
     
     # Camera signals
     cameraFrameReceived = pyqtSignal(object)
     cameraDetectionsReceived = pyqtSignal(object)
+
+    # Others
+    notifyScreenSelected = pyqtSignal()
     
     def _nucleo_watchdog(self):
         # If heartbeat changes, nucleo is responding
@@ -107,17 +113,23 @@ class ZmqClient(QObject, ZmqCodecMixin):
         else:
             self._nucleo_responding = False
         self.notifyNucleoResponding.emit()
+
+    def _send_side(self):
+        msg = Int32Value(value=self._side)
+        self.publishTopic('gui/out/side', msg)
     
     def __init__(self, parent=None):
         super().__init__(parent)
         self._context = zmq.Context()
         
+        # connect to the pub socket of goldo_main and set topic subscribe filter
         self._sub_socket = self._context.socket(zmq.SUB)
-        self._sub_socket.bind('tcp://*:3901')
-        self._sub_socket.setsockopt(zmq.SUBSCRIBE,b'')
+        self._sub_socket.connect('tcp://localhost:3801')
+        self._sub_socket.setsockopt(zmq.SUBSCRIBE,b'gui/in/')
         
+        # connect to the sub socket of goldo_main
         self._pub_socket = self._context.socket(zmq.PUB)
-        self._pub_socket.bind('tcp://*:3902')
+        self._pub_socket.connect('tcp://localhost:3802')
         
         self._notifier = QSocketNotifier(self._sub_socket.getsockopt(zmq.FD), QSocketNotifier.Read, self)
         self._notifier.activated.connect(self._on_sub_socket_event)
@@ -132,6 +144,9 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         # Match variables
         self._side = 0
+        self._side_timer = QTimer(self)
+        self._side_timer.timeout.connect(self._send_side)
+        self._side_timer.start(1000)
         self._opponents_number = 1
         self._score = 0
         self._match_timer = 0
@@ -148,14 +163,22 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._tirette = False
         self._emergency_stop = True
         self._pavillon = True
+        self._left_lift = False
+        self._right_lift = False
 
-        # Table variable
+        # RPLidar variables
+        self._rplidar_running = False
+
+        # Table variables
         self._robot_pose = RobotPose()
         self._robot_pose._x = 0.400
         self._robot_pose._y = -0.600
         self._robot_pose._yaw = 0.2
         self._robot_detection = []
         self._compass = 0
+
+        #Others
+        self._gui_screen_selected = 0
         
     @pyqtSlot()
     def configNucleo(self):
@@ -165,13 +188,18 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtSlot()
     def preMatch(self):
         msg = _sym_db.GetSymbol('google.protobuf.Empty')()
-        self.publishTopic('robot/sequence/prematch/execute', msg)
+        self.publishTopic('gui/out/commands/prematch', msg)
         
     @pyqtSlot()
     def odriveCalibration(self):
         msg = Int32Value(value=0)
         self.publishTopic('nucleo/in/propulsion/calibrate_odrive', msg)
         
+    @pyqtSlot(int)
+    def selectScreen(self, value):
+        self._gui_screen_selected = value
+        self.notifyScreenSelected.emit()
+
     def publishTopic(self, topic, msg):
         self._pub_socket.send_multipart(self._encodeTopic(topic, msg))
         
@@ -187,13 +215,26 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def _on_message_received(self, topic, msg):
         # State message
         if topic == 'gui/in/robot_state':
+            #Nucleo
+            if msg.nucleo.configured:
+                if self._config_status != 1:
+                    self._config_status = 1
+                    if not self._nucleo_watchdog_timer.isActive():
+                        self._nucleo_watchdog_timer.start(200)
+                    self.notifyConfigStatus.emit()
+
             #Sensors
             self._tirette = msg.sensors["tirette"]
             self.notifyTirette.emit()
             self._emergency_stop = msg.sensors["emergency_stop"]
             self.notifyEmergencyStop.emit()
             self._pavillon = msg.sensors["switch_pavillon"]
-            self.notifyPavillon.emit()
+            self._left_lift = msg.sensors["recalage_ascensceur_gauche"]
+            self._right_lift = msg.sensors["recalage_ascensceur_droit"]
+
+            #RPLidar
+            self._rplidar_running = msg.rplidar.running
+            self.notifyRPLidar.emit()
 
             #Odrv
             self._odrv_sync = msg.nucleo.odrive.synchronized
@@ -222,11 +263,21 @@ class ZmqClient(QObject, ZmqCodecMixin):
             else:
                 self._odrv_axis1_error = False
 
+            self.notifyODrive.emit()
+
+
             #Table
             self._robot_pose._x = msg.robot_pose.position.x
             self._robot_pose._y = msg.robot_pose.position.y
             self._robot_pose._yaw = msg.robot_pose.yaw
             self.notifyRobotPose.emit()
+
+            #Match
+            self._match_state = msg.match_state
+            self.notifyMatchState.emit()
+            if self._match_state == 4 :
+                self._gui_screen_selected = 5
+                self.notifyScreenSelected.emit()
 
             #Lidar detection
             self._robot_detection = []
@@ -252,7 +303,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self._config_status = msg.status + 1
             if self._config_status == 1:
                 # Config is OK, run watchdog to monitor nucleo connection
-                self._nucleo_watchdog_timer.start(500)
+                self._nucleo_watchdog_timer.start(200)
             self.notifyConfigStatus.emit()
         if topic == 'gui/in/nucleo_reset':
             self._config_status = 0
@@ -272,10 +323,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
         if topic == 'gui/in/match_timer':
             self._match_timer = msg.value
             self.notifyMatchTimer.emit()
-        if topic == 'gui/in/match_state':
-            self._match_state = msg.value
-            self.notifyMatchState.emit()
-
+            if self._match_state >= 2 :
+                if self._match_timer < 5 :
+                    self._gui_screen_selected = 5
+                    self.notifyScreenSelected.emit()
         # Sensors messages     
         if topic == 'gui/in/sensors/start_match':
             self._tirette = msg.value
@@ -344,7 +395,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
     @pyqtProperty(int, notify=notifyODrive)
     def odrv_axis1_state(self):
-        return self._odrv_axis0_state
+        return self._odrv_axis1_state
 
     @pyqtProperty(bool, notify=notifyODrive)
     def odrv_axis0_error(self):
@@ -363,9 +414,21 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def emergency_stop(self):
         return self._emergency_stop
 
-    @pyqtProperty(bool, notify=notifyPavillon)
+    @pyqtProperty(bool, notify=notifySensors)
     def pavillon(self):
         return self._pavillon
+
+    @pyqtProperty(bool, notify=notifySensors)
+    def left_lift(self):
+        return self._left_lift
+    
+    @pyqtProperty(bool, notify=notifySensors)
+    def right_lift(self):
+        return self._right_lift
+
+    @pyqtProperty(bool, notify=notifyRPLidar)
+    def rplidar_running(self):
+        return self._rplidar_running
 
      # Table properties
     @pyqtProperty(RobotPose, notify=notifyRobotPose)
@@ -403,3 +466,8 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(int, notify=notifyCompass)
     def compass(self):
         return self._compass
+
+    # Others
+    @pyqtProperty(int, notify=notifyScreenSelected)
+    def gui_screen_selected(self):
+        return self._gui_screen_selected

@@ -27,11 +27,32 @@ Page {
         }
     }
     
+    function getPrematchColor(textColor){
+        if(!textColor){
+            switch(zmqClient.match_state){
+                case 0:
+                    return 'lightgray'
+                case 1:
+                    return 'lightgreen'
+                default:
+                    return 'green'
+            }
+        }
+        else{
+            if(zmqClient.match_state >= 2){
+                return 'white'
+            }
+            else{
+                return 'black'
+            }
+        }
+    }
+    
     function getSideColor(textColor){
         if(!textColor){
             switch(zmqClient.side){
                 case 0:
-                    return 'gray'
+                    return 'lightgray'
                 case 1:
                     return 'blue'
                 case 2:
@@ -52,7 +73,10 @@ Page {
 
     function getOdrvColor(textColor){
         if(!textColor){
-            if(zmqClient.odrv_axis0_error || zmqClient.odrv_axis1_error || !zmqClient.odrv_sync){
+            if (!zmqClient.nucleo_responding || zmqClient.config_status != 1){
+                return 'lightgray'
+            }
+            else if(zmqClient.odrv_axis0_error || zmqClient.odrv_axis1_error){
                 return 'red'
             }
             else if(zmqClient.odrv_axis0_state == 0 || zmqClient.odrv_axis1_state == 0){
@@ -63,7 +87,10 @@ Page {
             }
         }
         else {
-            if(zmqClient.odrv_axis0_error || zmqClient.odrv_axis1_error || !zmqClient.odrv_sync){
+            if (!zmqClient.nucleo_responding || zmqClient.config_status != 1){
+                return 'black'
+            }
+            else if(zmqClient.odrv_axis0_error || zmqClient.odrv_axis1_error){
                 return 'white'
             }
             else if(zmqClient.odrv_axis0_state == 0 || zmqClient.odrv_axis1_state == 0){
@@ -151,7 +178,7 @@ Page {
             
             // Config nucleo button
             Rectangle {
-                color: getStatusColor(false)
+                color: zmqClient.config_status ? 'green' : 'lightgray'
                 MouseArea {
                     anchors.fill: parent
                     onClicked: { zmqClient.configNucleo() }
@@ -161,7 +188,7 @@ Page {
                 Layout.columnSpan: 1
                 Layout.rowSpan: 1
                 Label {
-                    color: getStatusColor(true)
+                    color: zmqClient.config_status ? 'white' : 'black'
                     text: "Config nucleo"
                     font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
@@ -250,13 +277,13 @@ Page {
 
             //Pre-match sequence
             Rectangle {
-                color: "#888888"
+                color: getPrematchColor(false)
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 1
                 Layout.rowSpan: 1
                 Label {
-                    color: "black"
+                    color: getPrematchColor(true)
                     text: "Pre-match sequence"
                     font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
@@ -274,13 +301,13 @@ Page {
 
             //Tirette state
             Rectangle {
-                color: !zmqClient.tirette == 1 ? "lightgreen" : "red"
+                color: !zmqClient.tirette == 1 ? "green" : "red"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 1
                 Layout.rowSpan: 1
                 Label {
-                    color: "black"
+                    color: "white"
                     text: "Tirette"
                     font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter

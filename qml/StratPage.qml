@@ -1,7 +1,6 @@
 import QtQuick 2.4
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.4
-import QtQml.Models 2.15
 
 Page {
     function getCompassColor(textColor){
@@ -33,6 +32,18 @@ Page {
                 return "N"
             case 2:
                 return "S"
+        }
+    }
+
+    function detectionVisible(x, y, quality){
+        if(quality == 0){
+            return false
+        }
+        else if(Math.abs(zmqClient.robot_pose_x - x < 0.1) && Math.abs(zmqClient.robot_pose_y - y < 0.1)){
+            return false
+        }
+        else {
+            return true
         }
     }
 
@@ -75,7 +86,7 @@ Page {
             height: width
             radius: width / 2
             color: "lavender"
-            visible: modelData.quality == 0 ? false : true
+            visible: detectionVisible(modelData.x, modelData.y)
             x: (modelData.y + 1.500) * parent.width / 3.000 - width/2
             y: modelData.x * parent.height / 2.000 - height / 2
             Label {

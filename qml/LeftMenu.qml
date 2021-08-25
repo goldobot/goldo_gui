@@ -6,10 +6,9 @@ import QtQuick.Layouts 1.4
 Item {
     width: parent.width / 8
     height: parent.height - (parent.height/ 12)
-    property var selected: 0
 
     function isSelected(number){
-        if(number == selected)
+        if(number == zmqClient.gui_screen_selected)
             return true
         else
             return false
@@ -33,7 +32,7 @@ Item {
             id: column
             width: 140
             height: 440
-            spacing: 0            
+            spacing: 0
 
             Rectangle {
                 id: match_button
@@ -52,7 +51,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        setSelected(0)
+                        zmqClient.selectScreen(0)
                     }
                 }
             }
@@ -74,7 +73,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        setSelected(1)
+                        zmqClient.selectScreen(1)
                     }
                 }
             }
@@ -96,7 +95,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        setSelected(2)
+                        zmqClient.selectScreen(2)
                     }
                 }
             }
@@ -118,7 +117,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        setSelected(3)
+                        zmqClient.selectScreen(3)
                     }
                 }
             }
@@ -140,7 +139,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        setSelected(4)
+                        zmqClient.selectScreen(4)
                     }
                 }
             }
@@ -183,17 +182,10 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        setSelected(5)
+                        zmqClient.selectScreen(5)
                     }
                 }
             }
         }
     }
 }
-
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:600;width:800}
-}
-##^##*/

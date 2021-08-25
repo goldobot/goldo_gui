@@ -29,17 +29,17 @@ ApplicationWindow {
       anchors.bottom: parent.bottom
       anchors.right: parent.right
 
-      currentIndex: leftMenu.getSelected()
+      currentIndex: zmqClient.gui_screen_selected
       MatchSetupPage {          
       }
       StratPage {
       }
       Rectangle {
-          color: 'cyan'
+          color: 'red'
           height: parent.height
           width: parent.width
       }
-      CupDisplayPage {
+      StatusPage {
       }
       CameraDisplayPage {
       }
