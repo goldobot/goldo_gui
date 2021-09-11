@@ -94,14 +94,12 @@ class ZmqClient(QObject, ZmqCodecMixin):
     notifyRobotPose = pyqtSignal()
     notifyRobotDetect = pyqtSignal()
     notifyCompass = pyqtSignal()
-
     # RPLidar signals
     notifyRPLidar = pyqtSignal()
     
     # Camera signals
     cameraFrameReceived = pyqtSignal(object)
     cameraDetectionsReceived = pyqtSignal(object)
-
     # Others
     notifyScreenSelected = pyqtSignal()
     
@@ -113,7 +111,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
         else:
             self._nucleo_responding = False
         self.notifyNucleoResponding.emit()
-
     def _send_side(self):
         msg = Int32Value(value=self._side)
         self.publishTopic('gui/out/side', msg)
@@ -176,7 +173,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._robot_pose._yaw = 0.2
         self._robot_detection = []
         self._compass = 0
-
         #Others
         self._gui_screen_selected = 0
         
@@ -231,6 +227,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self._pavillon = msg.sensors["switch_pavillon"]
             self._left_lift = msg.sensors["recalage_ascensceur_gauche"]
             self._right_lift = msg.sensors["recalage_ascensceur_droit"]
+            self.notifySensors.emit()
 
             #RPLidar
             self._rplidar_running = msg.rplidar.running
@@ -262,16 +259,13 @@ class ZmqClient(QObject, ZmqCodecMixin):
                 self._odrv_axis1_error = True
             else:
                 self._odrv_axis1_error = False
-
             self.notifyODrive.emit()
-
 
             #Table
             self._robot_pose._x = msg.robot_pose.position.x
             self._robot_pose._y = msg.robot_pose.position.y
             self._robot_pose._yaw = msg.robot_pose.yaw
             self.notifyRobotPose.emit()
-
             #Match
             self._match_state = msg.match_state
             self.notifyMatchState.emit()
@@ -417,7 +411,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(bool, notify=notifySensors)
     def pavillon(self):
         return self._pavillon
-
     @pyqtProperty(bool, notify=notifySensors)
     def left_lift(self):
         return self._left_lift
@@ -466,8 +459,3 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(int, notify=notifyCompass)
     def compass(self):
         return self._compass
-
-    # Others
-    @pyqtProperty(int, notify=notifyScreenSelected)
-    def gui_screen_selected(self):
-        return self._gui_screen_selected
