@@ -71,19 +71,23 @@ Page {
         }
     }
 
+    //Odrive button color
     function getOdrvColor(textColor){
         if(!textColor){
             if (!zmqClient.nucleo_responding || zmqClient.config_status != 1){
-                return 'lightgray'
+                return 'lightgray' //default color
             }
             else if(zmqClient.odrv_axis0_error || zmqClient.odrv_axis1_error){
-                return 'red'
+                return 'red' //error color
             }
             else if(zmqClient.odrv_axis0_state == 0 || zmqClient.odrv_axis1_state == 0){
-                return 'lightgreen'
+                return 'lightgreen' //odrive responding but not initialized yet color
+            }
+            else if(zmqClient.odrv_axis0_state == 6 || zmqClient.odrv_axis1_state == 6){
+                return 'lightgreen' //odrive responding but initializing ongoing
             }
             else{
-                return 'green'
+                return 'green' //everything ok color
             }
         }
         else {
@@ -94,6 +98,9 @@ Page {
                 return 'white'
             }
             else if(zmqClient.odrv_axis0_state == 0 || zmqClient.odrv_axis1_state == 0){
+                return 'black'
+            }
+            else if(zmqClient.odrv_axis0_state == 6 || zmqClient.odrv_axis1_state == 6){
                 return 'black'
             }
             else{
