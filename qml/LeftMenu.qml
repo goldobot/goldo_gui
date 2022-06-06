@@ -162,19 +162,10 @@ Item {
                         font.pixelSize: (leftMenuBar.width / 6) * 0.8
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
-                    Image{
-                        id: star_icon
-                        source: "../res/points.png"
-                        height: 20
-                        width: 20
-                        antialiasing: true
-                        anchors.horizontalCenter: parent.horizontalCenter
-                    }
                     Label{
                         color: "white"
                         text: zmqClient.score
-                        font.pixelSize: (leftMenuBar.width / 6) * 0.8
-                        anchors.leftMargin: 2 * star_icon.width
+                        font.pixelSize: (leftMenuBar.width / 2)
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
                 }
