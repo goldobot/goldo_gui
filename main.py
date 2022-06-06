@@ -31,4 +31,5 @@ if __name__ == "__main__":
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         sys.exit(app.exec_())
     except:
-        traceback.print_exc()
+        print("Exception in goldo_gui")
+        traceback.print_tb()

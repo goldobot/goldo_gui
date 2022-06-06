@@ -238,6 +238,8 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
     def _on_message_received(self, topic, msg):
         # State message
+        print(topic)
+        print(msg)
         if topic == 'gui/in/robot_state':
             #Nucleo
             if msg.nucleo.configured:
@@ -358,7 +360,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self.cameraDetectionsReceived.emit(msg)
 
     # STM properties
-    @pyqtProperty(int, notify=notifyHeartbeat)
+    @pyqtProperty("unsigned long long", notify=notifyHeartbeat)
     def heartbeat(self):
         return self._heartbeat
 
