@@ -54,7 +54,7 @@ Page {
                 case 0:
                     return 'lightgray'
                 case 1:
-                    return 'blue'
+                    return 'purple'
                 case 2:
                     return 'yellow'
             }
@@ -164,7 +164,7 @@ Page {
                     id: warningPavillon
                     color: "white"
                     visible: !zmqClient.pavillon == false ? true : false
-                    text: "Warning : Flag is not closed"
+                    text: "Warning : Thrower is not closed"
                     font.pixelSize: 24
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter

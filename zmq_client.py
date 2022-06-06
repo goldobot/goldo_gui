@@ -95,7 +95,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
     # Table signals
     notifyRobotPose = pyqtSignal()
     notifyRobotDetect = pyqtSignal()
-    notifyCompass = pyqtSignal()
     # RPLidar signals
     notifyRPLidar = pyqtSignal()
 
@@ -180,7 +179,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._robot_pose._y = -0.600
         self._robot_pose._yaw = 0.2
         self._robot_detection = []
-        self._compass = 0
         #Others
         self._gui_screen_selected = 0
 
@@ -309,9 +307,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
                 _detect = RobotDetection(detection.x, detection.y, detection.detect_quality)
                 self._robot_detection.append(_detect)
             self.notifyRobotDetect.emit()
-
-            self._compass = msg.table.compas
-            self.notifyCompass.emit()
 
         # STM messages
         if topic == 'gui/in/heartbeat':
@@ -485,10 +480,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(RobotDetection, notify=notifyRobotDetect)
     def robot_detection3(self):
         return self._robot_detection[2]
-
-    @pyqtProperty(int, notify=notifyCompass)
-    def compass(self):
-        return self._compass
 
     @pyqtProperty(int, notify=notifyScreenSelected)
     def gui_screen_selected(self):
