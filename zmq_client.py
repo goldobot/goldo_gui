@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QObject, QTimer, QSocketNotifier, pyqtSignal, pyqtSlot, pyqtProperty
 from PyQt5.QtQml import QQmlListProperty
 import zmq
+import socket
 from zmq_codec import ZmqCodecMixin
 from google.protobuf.wrappers_pb2 import Int32Value
 import pb2 as _pb2
@@ -80,6 +81,17 @@ class ZmqClient(QObject, ZmqCodecMixin):
     # Others
     notifyScreenSelected = pyqtSignal()
     notifyPlateSelected = pyqtSignal()
+    notifyIpAddress = pyqtSignal()
+
+    def _read_ip(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(0)
+        try:
+            # doesn't even have to be reachable
+            s.connect(('10.254.254.254', 1))
+            self._ip_address = s.getsockname()[0]
+        except Exception:
+            self._ip_address = '127.0.0.1'
 
     def _nucleo_watchdog(self):
         # If heartbeat changes, nucleo is responding
@@ -89,6 +101,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
         else:
             self._nucleo_responding = False
         self.notifyNucleoResponding.emit()
+
     def _send_side(self):
         msg = Int32Value(value=self._side)
         self.publishTopic('gui/out/side', msg)
@@ -157,9 +170,14 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._robot_pose._y = 0
         self._robot_pose._yaw = 0 
         self._robot_detection = []
+
         #Others
         self._gui_screen_selected = 0
         self._start_plate_selected = 0
+        self._ip_address = "127.0.0.1"
+        self._ip_timer = QTimer(self)
+        self._ip_timer.timeout.connect(self._read_ip)
+        self._ip_timer.start(5000)
 
     @pyqtSlot()
     def configNucleo(self):
@@ -235,7 +253,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
         print(topic)
         print(msg)
         if topic == 'gui/in/robot_state':
-            #Nucleo
+            # Nucleo
             if msg.nucleo.configured:
                 if self._config_status != 1:
                     self._config_status = 1
@@ -243,7 +261,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
                         self._nucleo_watchdog_timer.start(200)
                     self.notifyConfigStatus.emit()
 
-            #Sensors
+            # Sensors
             self._tirette = msg.sensors["tirette"]
             self.notifyTirette.emit()
             self._emergency_stop = msg.sensors["emergency_stop"]
@@ -290,14 +308,14 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self._robot_pose._y = msg.robot_pose.position.y
             self._robot_pose._yaw = msg.robot_pose.yaw
             self.notifyRobotPose.emit()
-            #Match
+            # Match
             self._match_state = msg.match_state
             self.notifyMatchState.emit()
-            if self._match_state == 4 :
+            if self._match_state == 4:
                 self._gui_screen_selected = 5
                 self.notifyScreenSelected.emit()
 
-            #Lidar detection
+            # Lidar detection
             self._robot_detection = []
             for detection in msg.rplidar_detections:
                 _detect = RobotDetection(detection.x, detection.y, detection.detect_quality)
@@ -306,9 +324,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         # STM messages
         if topic == 'gui/in/heartbeat':
-            if(self._heartbeat > msg.timestamp):
-                #If heartbeat in message is lower than current, then the nucleo has been reset
-                #Reinit nucleo config status
+            if self._heartbeat > msg.timestamp:
+                # If heartbeat in message is lower than current
+                # then the nucleo has been reset
+                # Reinit nucleo config status
                 self._config_status = 0
                 self._nucleo_watchdog_timer.stop()
                 self.notifyConfigStatus.emit()
@@ -338,8 +357,8 @@ class ZmqClient(QObject, ZmqCodecMixin):
         if topic == 'gui/in/match_timer':
             self._match_timer = msg.value
             self.notifyMatchTimer.emit()
-            if self._match_state >= 2 :
-                if self._match_timer < 5 :
+            if self._match_state >= 2:
+                if self._match_timer < 5:
                     self._gui_screen_selected = 5
                     self.notifyScreenSelected.emit()
         # Sensors messages
@@ -434,6 +453,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(bool, notify=notifySensors)
     def pavillon(self):
         return self._pavillon
+
     @pyqtProperty(bool, notify=notifySensors)
     def left_lift(self):
         return self._left_lift
@@ -446,7 +466,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def rplidar_running(self):
         return self._rplidar_running
 
-     # Table properties
+    # Table properties
     @pyqtProperty(RobotPose, notify=notifyRobotPose)
     def robot_pose(self):
         return self._robot_pose
@@ -486,3 +506,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(int, notify=notifyPlateSelected)
     def start_plate_selected(self):
         return self._start_plate_selected
+
+    @pyqtProperty(str, notify=notifyIpAddress)
+    def ip_address(self):
+        return self._ip_address

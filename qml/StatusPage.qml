@@ -12,17 +12,17 @@ Page {
             columnSpacing: 5
             rowSpacing: 5
             rows: 6
-            columns: 3
+            columns: 1
 
             Rectangle {
-                color: zmqClient.left_lift ? 'green' : 'lightgray'
+                color: 'lightgray'
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 1
                 Layout.rowSpan: 1
                 Label {
-                    color: zmqClient.left_lift ? 'white' : 'black'
-                    text: "Ascenseur G"
+                    color: 'black'
+                    text: zmqClient.ip_address
                     font.pixelSize: 24
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
