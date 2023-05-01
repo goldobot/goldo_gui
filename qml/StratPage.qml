@@ -24,7 +24,6 @@ Page {
         else
             return false
     }
-    }
 
     Image {
         source: "../res/table.png"
@@ -50,7 +49,6 @@ Page {
             }
         }
     }
-
     
     // Top left
     Rectangle{

@@ -47,30 +47,6 @@ class RobotDetection(QObject):
     def quality(self):
         return self._quality
 
-    @pyqtProperty(int, constant=True)
-    def axis(self):
-        return self._axis
-
-    @pyqtProperty(int, constant=True)
-    def motor(self):
-        return self._motor
-
-    @pyqtProperty(int, constant=True)
-    def controller(self):
-        return self._controller
-
-    @pyqtProperty(int, constant=True)
-    def encoder(self):
-        return self._encoder
-
-    @pyqtProperty(int, constant=True)
-    def sensorless(self):
-        return self._sensorless
-
-    @pyqtProperty(bool, constant=True)
-    def is_in_error(self):
-        return self._is_in_error
-
 class ZmqClient(QObject, ZmqCodecMixin):
     # STM32 signals
     notifyHeartbeat = pyqtSignal()
