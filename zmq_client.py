@@ -103,6 +103,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
     cameraDetectionsReceived = pyqtSignal(object)
     # Others
     notifyScreenSelected = pyqtSignal()
+    notifyPlateSelected = pyqtSignal()
 
     def _nucleo_watchdog(self):
         # If heartbeat changes, nucleo is responding
@@ -155,6 +156,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._score = 0
         self._match_timer = 0
         self._match_state = 0
+        self._match_start_zone = 0
 
         # Odrive variables
         self._odrv_sync = False
@@ -175,12 +177,13 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         # Table variables
         self._robot_pose = RobotPose()
-        self._robot_pose._x = 0.400
-        self._robot_pose._y = -0.600
-        self._robot_pose._yaw = 0.2
+        self._robot_pose._x = 0.5
+        self._robot_pose._y = 0
+        self._robot_pose._yaw = 0 
         self._robot_detection = []
         #Others
         self._gui_screen_selected = 0
+        self._start_plate_selected = 0
 
     @pyqtSlot()
     def configNucleo(self):
@@ -201,6 +204,21 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def selectScreen(self, value):
         self._gui_screen_selected = value
         self.notifyScreenSelected.emit()
+
+    @pyqtSlot(int)
+    def selectPlate(self, value):
+        if value == self._start_plate_selected:
+            return 
+        elif self._side == 1 and value % 2 == 1:
+            self._start_plate_selected = value
+        elif self._side == 2 and value % 2 == 0 and value != 0:
+            self._start_plate_selected = value
+        elif value == 0:
+            self._start_plate_selected = value
+        else:
+            return
+        
+        self.notifyPlateSelected.emit()
 
     def publishTopic(self, topic, msg):
         self._pub_socket.send_multipart(self._encodeTopic(topic, msg))
@@ -374,10 +392,12 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
     # Match properties
     def setSide(self, side):
-        self._side = side
-        self.notifySide.emit()
-        msg = Int32Value(value=side)
-        self.publishTopic('gui/out/side', msg)
+        if self._side != side:
+            self._side = side
+            self.selectPlate(0)
+            self.notifySide.emit()
+            msg = Int32Value(value=side)
+            self.publishTopic('gui/out/side', msg)
 
     def setOpponentsNumber(self, opponents_number):
         self._opponents_number = opponents_number
@@ -486,3 +506,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(int, notify=notifyScreenSelected)
     def gui_screen_selected(self):
         return self._gui_screen_selected
+
+    @pyqtProperty(int, notify=notifyPlateSelected)
+    def start_plate_selected(self):
+        return self._start_plate_selected

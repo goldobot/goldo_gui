@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import argparse
-import traceback
 import sys, signal
 from PyQt5 import QtCore, QtGui, QtQml
 from zmq_client import ZmqClient
@@ -22,14 +21,11 @@ if __name__ == "__main__":
         app.setOverrideCursor(QtCore.Qt.BlankCursor);
 
     QtQml.qmlRegisterType(CameraItem, "goldo", 1, 0, "CameraItem")
-    try:
-        engine = QtQml.QQmlApplicationEngine()
-        zmq_client = ZmqClient()
-        engine.rootContext().setContextProperty("zmqClient", zmq_client)
-        engine.rootContext().setContextProperty("windowed", args.windowed)
-        engine.load('qml/main.qml')
-        signal.signal(signal.SIGINT, signal.SIG_DFL)
-        sys.exit(app.exec_())
-    except:
-        print("Exception in goldo_gui")
-        traceback.print_tb()
+    
+    engine = QtQml.QQmlApplicationEngine()
+    zmq_client = ZmqClient()
+    engine.rootContext().setContextProperty("zmqClient", zmq_client)
+    engine.rootContext().setContextProperty("windowed", args.windowed)
+    engine.load('qml/main.qml')
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    sys.exit(app.exec_())

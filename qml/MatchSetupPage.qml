@@ -54,9 +54,9 @@ Page {
                 case 0:
                     return 'lightgray'
                 case 1:
-                    return 'purple'
+                    return 'green'
                 case 2:
-                    return 'yellow'
+                    return 'blue'
             }
         }
         else {
@@ -66,7 +66,7 @@ Page {
                 case 1:
                     return 'white'
                 case 2:
-                    return 'black'
+                    return 'white'
             }
         }
     }
@@ -118,6 +118,15 @@ Page {
         }
     }
 
+    function isStartPlateUndefined(){
+        if (zmqClient.start_plate_selected == 0) {
+            return true
+        }
+        else{
+            return false
+        }
+    }
+
     //Title bar, also displays warnings
     Rectangle{
         anchors.fill: parent
@@ -132,7 +141,7 @@ Page {
 
             Rectangle {
                 id: rectangle1
-                color: isSideUndefined() || zmqClient.pavillon ? "#FF0000" : "#222222"
+                color: isSideUndefined() || isStartPlateUndefined() ? "#FF0000" : "#222222"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
@@ -141,7 +150,7 @@ Page {
                 Layout.column: 0
                 Label {
                     color: "white"
-                    visible: isSideUndefined() || !zmqClient.pavillon == false ? true : false
+                    visible: isSideUndefined() || isStartPlateUndefined() ? true : false
                     text: "Configuration"
                     font.pixelSize: 44
                     horizontalAlignment: Text.AlignHCenter
@@ -161,10 +170,10 @@ Page {
                     anchors.bottom: parent.bottom
                 }
                 Label {
-                    id: warningPavillon
+                    id: warningStart
                     color: "white"
-                    visible: !zmqClient.pavillon == false ? true : false
-                    text: "Warning : Thrower is not closed"
+                    visible: isStartPlateUndefined() ? true : false
+                    text: "Warning : Start zone is not selected"
                     font.pixelSize: 24
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -173,7 +182,7 @@ Page {
                 }
                 Label {
                     color: "white"
-                    visible: isSideUndefined() || zmqClient.pavillon ? false : true
+                    visible: isSideUndefined() || isStartPlateUndefined() ? false : true
                     text: "Configuration"
                     font.pixelSize: 64
                     horizontalAlignment: Text.AlignHCenter
