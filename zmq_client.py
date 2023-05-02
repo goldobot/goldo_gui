@@ -116,6 +116,8 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def _send_side(self):
         msg = Int32Value(value=self._side)
         self.publishTopic('gui/out/side', msg)
+        msg = Int32Value(value=self._start_plate_selected)
+        self.publishTopic('gui/out/start_zone', msg)
 
     def __init__(self, parent=None):
         super().__init__(parent)
