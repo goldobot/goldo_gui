@@ -54,10 +54,18 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: "red"
-        opacity: isPlateSelected(1) ? 0.5 : 0
+        color: isPlateSelected(1) ? "#55FF0000" : "#00FF0000"
         anchors.top: parent.top
         anchors.left: parent.left
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 3
+            opacity: 0.5
+            color: "black"
+            text: "1"
+        }
         
         MouseArea {
             anchors.fill: parent
@@ -71,11 +79,19 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: "red"
-        opacity: isPlateSelected(2) ? 0.5 : 0
+        color: isPlateSelected(2) ? "#55FF0000" : "#00FF0000"
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.leftMargin:parent.width * 0.15 * 2
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 3
+            opacity: 0.5
+            color: "black"
+            text: "2"
+        }
         
         MouseArea {
             anchors.fill: parent
@@ -89,11 +105,19 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: "red"
-        opacity: isPlateSelected(3) ? 0.5 : 0
+        color: isPlateSelected(3) ? "#55FF0000" : "#00FF0000"
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.rightMargin:parent.width * 0.15 * 2
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 3
+            opacity: 0.5
+            color: "black"
+            text: "3"
+        }
         
         MouseArea {
             anchors.fill: parent
@@ -107,10 +131,18 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: "red"
-        opacity: isPlateSelected(4) ? 0.5 : 0
+        color: isPlateSelected(4) ? "#55FF0000" : "#00FF0000"
         anchors.top: parent.top
         anchors.right: parent.right
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 3
+            opacity: 0.5
+            color: "black"
+            text: "4"
+        }
         
         MouseArea {
             anchors.fill: parent
@@ -124,11 +156,19 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: "red"
-        opacity: isPlateSelected(5) ? 0.5 : 0
+        color: isPlateSelected(5) ? "#55FF0000" : "#00FF0000"
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.topMargin:parent.height * 0.25
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 3
+            opacity: 0.5
+            color: "black"
+            text: "5"
+        }
         
         MouseArea {
             anchors.fill: parent
@@ -142,11 +182,19 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: "red"
-        opacity: isPlateSelected(6) ? 0.5 : 0
+        color: isPlateSelected(6) ? "#55FF0000" : "#00FF0000"
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.bottomMargin:parent.height * 0.25
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 3
+            opacity: 0.5
+            color: "black"
+            text: "6"
+        }
         
         MouseArea {
             anchors.fill: parent
@@ -160,10 +208,18 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: "red"
-        opacity: isPlateSelected(7) ? 0.5 : 0
+        color: isPlateSelected(7) ? "#55FF0000" : "#00FF0000"
         anchors.bottom: parent.bottom
         anchors.right: parent.right
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 3
+            opacity: 0.5
+            color: "black"
+            text: "7"
+        }
         
         MouseArea {
             anchors.fill: parent
@@ -177,11 +233,19 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: "red"
-        opacity: isPlateSelected(8) ? 0.5 : 0
+        color: isPlateSelected(8) ? "#55FF0000" : "#00FF0000"
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.rightMargin: parent.width * 0.15 * 2
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 3
+            opacity: 0.5
+            color: "black"
+            text: "8"
+        }
         
         MouseArea {
             anchors.fill: parent
@@ -195,11 +259,19 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: "red"
-        opacity: isPlateSelected(9) ? 0.5 : 0
+        color: isPlateSelected(9) ? "#55FF0000" : "#00FF0000"
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.leftMargin: parent.width * 0.15 * 2
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 3
+            opacity: 0.5
+            color: "black"
+            text: "9"
+        }
 
         MouseArea {
             anchors.fill: parent
@@ -213,10 +285,18 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: "red"
-        opacity: isPlateSelected(10) ? 0.5 : 0
+        color: isPlateSelected(10) ? "#55FF0000" : "#00FF0000"
         anchors.bottom: parent.bottom
         anchors.left: parent.left
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 3
+            opacity: 0.5
+            color: "black"
+            text: "10"
+        }
         
         MouseArea {
             anchors.fill: parent

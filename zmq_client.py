@@ -2,6 +2,7 @@ from PyQt5.QtCore import QObject, QTimer, QSocketNotifier, pyqtSignal, pyqtSlot,
 from PyQt5.QtQml import QQmlListProperty
 import zmq
 import socket
+import subprocess
 from zmq_codec import ZmqCodecMixin
 from google.protobuf.wrappers_pb2 import Int32Value
 import pb2 as _pb2
@@ -84,14 +85,24 @@ class ZmqClient(QObject, ZmqCodecMixin):
     notifyIpAddress = pyqtSignal()
 
     def _read_ip(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.settimeout(0)
+        print("Read IP")
         try:
-            # doesn't even have to be reachable
-            s.connect(('10.254.254.254', 1))
-            self._ip_address = s.getsockname()[0]
-        except Exception:
-            self._ip_address = '127.0.0.1'
+            self._ip_address = ""
+            result_b = subprocess.check_output(["ip", "a"])
+            result_s = result_b.decode("utf-8")
+            for li in result_s.split('\n'):
+                tok = li.split()
+                if len(tok) > 0 and tok[0] == "inet":
+                    for t in tok:
+                        if t.startswith("eth") or t.startswith("wlan"):
+                            if self._ip_address != "":
+                                self._ip_address = self._ip_address + '\n'
+                            self._ip_address = self._ip_address + t + " : " + tok[1]
+                            self.notifyIpAddress.emit()
+        except:
+            print("ip command not available")
+        finally:
+            print(self._ip_address)
 
     def _nucleo_watchdog(self):
         # If heartbeat changes, nucleo is responding
@@ -177,7 +188,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._ip_address = "127.0.0.1"
         self._ip_timer = QTimer(self)
         self._ip_timer.timeout.connect(self._read_ip)
-        self._ip_timer.start(5000)
+        self._ip_timer.start(10000)
 
     @pyqtSlot()
     def configNucleo(self):
@@ -250,8 +261,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
     def _on_message_received(self, topic, msg):
         # State message
-        print(topic)
-        print(msg)
         if topic == 'gui/in/robot_state':
             # Nucleo
             if msg.nucleo.configured:
