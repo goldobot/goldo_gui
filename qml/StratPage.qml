@@ -25,11 +25,13 @@ Page {
             return false
     }
 
+    // Table vinyl
     Image {
         source: "../res/table.png"
         anchors.fill : parent
     }
 
+    // Lidar detections
     Repeater{
         model: zmqClient.robot_detection
         Rectangle{
@@ -50,6 +52,8 @@ Page {
         }
     }
     
+    // Available start zones
+
     // Top left
     Rectangle{
         width: square_width
@@ -306,6 +310,99 @@ Page {
         }
     }
 
+    // Start pos display
+    Image {
+        source: "../res/arrow.png"
+        opacity: 0.7
+        width: parent.width / 5
+        height: parent.height / 3
+        visible: isPlateSelected(1)
+        x: 0.20 * parent.width / 3.000 - width/2
+        y: (1.00 - 0.8)  * parent.height / 2.000 - height / 2
+    }
+
+    Image {
+        source: "../res/arrow.png"
+        opacity: 0.7
+        width: parent.width / 5
+        height: parent.height / 3
+        visible: isPlateSelected(2) || isPlateSelected(9)
+        x: 0.20 * parent.width / 3.000 - width/2
+        y: 1.00 * parent.height / 2.000 - height / 2
+    }
+
+    Image {
+        source: "../res/arrow180.png"
+        opacity: 0.7
+        width: parent.width / 5
+        height: parent.height / 3
+        visible: isPlateSelected(3)
+        x: 2.80 * parent.width / 3.000 - width/2
+        y: (1.00 - 0.275) * parent.height / 2.000 - height / 2
+    }
+
+    Image {
+        source: "../res/arrow180.png"
+        opacity: 0.7
+        width: parent.width / 5
+        height: parent.height / 3
+        visible: isPlateSelected(4)
+        x: 2.80 * parent.width / 3.000 - width/2
+        y: (1.00 - 0.8) * parent.height / 2.000 - height / 2
+    }
+
+    Image {
+        source: "../res/arrow270.png"
+        opacity: 0.7
+        width: parent.width / 5
+        height: parent.height / 3
+        visible: isPlateSelected(5)
+        x: 1.875 * parent.width / 3.000 - width/2
+        y: (1.00 - 0.80) * parent.height / 2.000 - height / 2
+    }
+
+    Image {
+        source: "../res/arrow90.png"
+        opacity: 0.7
+        width: parent.width / 5
+        height: parent.height / 3
+        visible: isPlateSelected(6)
+        x: 1.875 * parent.width / 3.000 - width/2
+        y: (1.00 + 0.80) * parent.height / 2.000 - height / 2
+    }
+
+    Image {
+        source: "../res/arrow180.png"
+        opacity: 0.7
+        width: parent.width / 5
+        height: parent.height / 3
+        visible: isPlateSelected(7)
+        x: 2.80 * parent.width / 3.000 - width/2
+        y: (1.00 + 0.8) * parent.height / 2.000 - height / 2
+    }
+
+    Image {
+        source: "../res/arrow180.png"
+        opacity: 0.7
+        width: parent.width / 5
+        height: parent.height / 3
+        visible: isPlateSelected(8)
+        x: 2.80 * parent.width / 3.000 - width/2
+        y: (1.00 + 0.275) * parent.height / 2.000 - height / 2
+    }
+
+
+    Image {
+        source: "../res/arrow.png"
+        opacity: 0.7
+        width: parent.width / 5
+        height: parent.height / 3
+        visible: isPlateSelected(10)
+        x: 0.20 * parent.width / 3.000 - width/2
+        y: (1.00 + 0.8)  * parent.height / 2.000 - height / 2
+    }
+
+    // Robot position
     Image {
         id: robot_shape
         source: "../res/robot.png"
