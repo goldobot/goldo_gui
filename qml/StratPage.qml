@@ -18,6 +18,29 @@ Page {
         }
     }
 
+
+    function cakeVisible(here){
+        if(here == true){
+            return true
+        }
+        return false
+    }
+    
+    function cakeType(color){
+        switch(color) {
+            case 0:
+                return "../res/unknown_cake.png"
+            case 1:
+                return "../res/brown_cake.png"
+            case 2:
+                return "../res/yellow_cake.png"
+            case 3:
+                return "../res/pink_cake.png"
+            case 4:
+                return "../res/perfect_cake.png"
+        }
+    }
+    
     function isPlateSelected(index){
         if(index == zmqClient.start_plate_selected)
             return true
@@ -49,6 +72,20 @@ Page {
                 color: "black"
                 text: modelData.quality
             }
+        }
+    }
+
+    // Lidar detections
+    Repeater{
+        model: zmqClient.cakes
+        // Robot position
+        Image {
+            source: cakeType(modelData.color)
+            width: 0.12 * parent.width / 3.000
+            height: 0.12 * parent.height / 2.000
+            x: modelData.x * parent.width / 3.000 - width/2
+            y: (modelData.y+1.000) * parent.height / 2.000 - height / 2
+            visible: cakeVisible(modelData.here)
         }
     }
     
@@ -411,6 +448,16 @@ Page {
         x: zmqClient.robot_pose_x * parent.width / 3.000 - width/2
         y: (-zmqClient.robot_pose_y + 1) * parent.height / 2.000 - height / 2
         transform: Rotation { origin.x: robot_shape.width/2 ; origin.y: robot_shape.height/2; angle: 90 + ((-1) * (180 * zmqClient.robot_pose_yaw / Math.PI))}
+    }
+
+    Image {
+        id: secondary_robot_shape
+        source: "../res/secondary_robot.png"
+        width: parent.width / 12
+        height: parent.height / 12
+        x: zmqClient.secondary_robot_pose_x * parent.width / 3.000 - width/2
+        y: (-zmqClient.secondary_robot_pose_y + 1) * parent.height / 2.000 - height / 2
+        transform: Rotation { origin.x: robot_shape.width/2 ; origin.y: robot_shape.height/2; angle: 90 + ((-1) * (180 * zmqClient.secondary_robot_pose_yaw / Math.PI))}
     }
 
 }
