@@ -54,7 +54,7 @@ Page {
                 case 0:
                     return 'lightgray'
                 case 1:
-                    return 'green'
+                    return 'yellow'
                 case 2:
                     return 'blue'
             }
@@ -64,7 +64,7 @@ Page {
                 case 0:
                     return 'black'
                 case 1:
-                    return 'white'
+                    return 'black'
                 case 2:
                     return 'white'
             }

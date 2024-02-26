@@ -262,10 +262,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtSlot(int)
     def selectPlate(self, value):
         if value == self._start_plate_selected:
-            return 
-        elif self._side == 1 and value % 2 == 1:
+            return
+        elif self._side == 1 and value % 2 == 0 and value != 0:
             self._start_plate_selected = value
-        elif self._side == 2 and value % 2 == 0 and value != 0:
+        elif self._side == 2 and value % 2 == 1:
             self._start_plate_selected = value
         elif value == 0:
             self._start_plate_selected = value

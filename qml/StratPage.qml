@@ -116,14 +116,13 @@ Page {
         }
     }
 
-    // Left middle top
+    // Top right
     Rectangle{
         width: square_width
         height: square_height
         color: isPlateSelected(2) ? "#55FF0000" : "#00FF0000"
         anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.leftMargin:parent.width * 0.15 * 2
+        anchors.right: parent.right
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -142,14 +141,14 @@ Page {
         }
     }
 
-    // Right middle top
+    // Right middle
     Rectangle{
         width: square_width
         height: square_height
         color: isPlateSelected(3) ? "#55FF0000" : "#00FF0000"
-        anchors.top: parent.top
+        anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-        anchors.rightMargin:parent.width * 0.15 * 2
+        //anchors.topMargin:parent.height * 0.25
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -168,12 +167,12 @@ Page {
         }
     }
 
-    // Top right
+    // Bottom right
     Rectangle{
         width: square_width
         height: square_height
         color: isPlateSelected(4) ? "#55FF0000" : "#00FF0000"
-        anchors.top: parent.top
+        anchors.bottom: parent.bottom
         anchors.right: parent.right
 
         Label {
@@ -193,14 +192,13 @@ Page {
         }
     }
 
-    // Right top middle
+    // Bottom left
     Rectangle{
         width: square_width
         height: square_height
         color: isPlateSelected(5) ? "#55FF0000" : "#00FF0000"
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.topMargin:parent.height * 0.25
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -219,14 +217,14 @@ Page {
         }
     }
 
-    // Right bottom middle
+    // Left middle
     Rectangle{
         width: square_width
         height: square_height
         color: isPlateSelected(6) ? "#55FF0000" : "#00FF0000"
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.bottomMargin:parent.height * 0.25
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        //anchors.topMargin:parent.height * 0.25
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -245,109 +243,8 @@ Page {
         }
     }
 
-    // Bottom right
-    Rectangle{
-        width: square_width
-        height: square_height
-        color: isPlateSelected(7) ? "#55FF0000" : "#00FF0000"
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-
-        Label {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            font.pixelSize: parent.height / 3
-            opacity: 0.5
-            color: "black"
-            text: "7"
-        }
-        
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                zmqClient.selectPlate(7)
-            }
-        }
-    }
-
-    // Right middle bottom
-    Rectangle{
-        width: square_width
-        height: square_height
-        color: isPlateSelected(8) ? "#55FF0000" : "#00FF0000"
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.rightMargin: parent.width * 0.15 * 2
-
-        Label {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            font.pixelSize: parent.height / 3
-            opacity: 0.5
-            color: "black"
-            text: "8"
-        }
-        
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                zmqClient.selectPlate(8)
-            }
-        }
-    }
-
-    // Left middle bottom
-    Rectangle{
-        width: square_width
-        height: square_height
-        color: isPlateSelected(9) ? "#55FF0000" : "#00FF0000"
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.leftMargin: parent.width * 0.15 * 2
-
-        Label {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            font.pixelSize: parent.height / 3
-            opacity: 0.5
-            color: "black"
-            text: "9"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                zmqClient.selectPlate(9)
-            }
-        }
-    }
-
-    // Bottom left
-    Rectangle{
-        width: square_width
-        height: square_height
-        color: isPlateSelected(10) ? "#55FF0000" : "#00FF0000"
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-
-        Label {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            font.pixelSize: parent.height / 3
-            opacity: 0.5
-            color: "black"
-            text: "10"
-        }
-        
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                zmqClient.selectPlate(10)
-            }
-        }
-    }
-
     // Start pos display
+    /*
     Image {
         source: "../res/arrow.png"
         opacity: 0.7
@@ -437,7 +334,7 @@ Page {
         visible: isPlateSelected(10)
         x: 0.20 * parent.width / 3.000 - width/2
         y: (1.00 + 0.8)  * parent.height / 2.000 - height / 2
-    }
+    }*/
 
     // Robot position
     Image {
@@ -445,19 +342,10 @@ Page {
         source: "../res/robot.png"
         width: parent.width / 12
         height: parent.height / 12
-        x: zmqClient.robot_pose_x * parent.width / 3.000 - width/2
-        y: (-zmqClient.robot_pose_y + 1) * parent.height / 2.000 - height / 2
-        transform: Rotation { origin.x: robot_shape.width/2 ; origin.y: robot_shape.height/2; angle: 90 + ((-1) * (180 * zmqClient.robot_pose_yaw / Math.PI))}
+        x: (zmqClient.robot_pose_y+ 1.500) * parent.width / 3.000 - width / 2
+        y: (zmqClient.robot_pose_x) * parent.height / 2.000 - height / 2
+        transform: Rotation { origin.x: robot_shape.width/2 ; origin.y: robot_shape.height/2; angle: 180 + ((-1) * (180 * zmqClient.robot_pose_yaw / Math.PI))}
     }
 
-    Image {
-        id: secondary_robot_shape
-        source: "../res/secondary_robot.png"
-        width: parent.width / 12
-        height: parent.height / 12
-        x: zmqClient.secondary_robot_pose_x * parent.width / 3.000 - width/2
-        y: (-zmqClient.secondary_robot_pose_y + 1) * parent.height / 2.000 - height / 2
-        transform: Rotation { origin.x: robot_shape.width/2 ; origin.y: robot_shape.height/2; angle: 90 + ((-1) * (180 * zmqClient.secondary_robot_pose_yaw / Math.PI))}
-    }
 
 }

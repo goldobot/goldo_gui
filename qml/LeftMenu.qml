@@ -38,7 +38,7 @@ Item {
                 id: match_button
                 height: leftMenuBar.height / 6
                 width: leftMenuBar.width
-                color: isSelected(0) ? "#ff1a1a" : "#424242"
+                color: isSelected(0) ? "#555555" : "#333333"
 
                 Label{
                     color: "white"
@@ -60,7 +60,7 @@ Item {
                 id: strat_button
                 height: leftMenuBar.height / 6
                 width: leftMenuBar.width                
-                color: isSelected(1) ? "#ff1a1a" : "#424242"
+                color: isSelected(1) ? "#555555" : "#333333"
 
                 Label{
                     color: "white"
@@ -82,7 +82,7 @@ Item {
                 id: control_button
                 height: leftMenuBar.height / 6
                 width: leftMenuBar.width                
-                color: isSelected(2) ? "#ff1a1a" : "#424242"
+                color: isSelected(2) ? "#555555" : "#333333"
 
                 Label{
                     color: "white"
@@ -104,7 +104,7 @@ Item {
                 id: status_button
                 height: leftMenuBar.height / 6
                 width: leftMenuBar.width
-                color: isSelected(3) ? "#ff1a1a" : "#424242"
+                color: isSelected(3) ? "#555555" : "#333333"
 
                 Label{
                     color: "white"
@@ -126,7 +126,7 @@ Item {
                 id: vision_button
                 height: leftMenuBar.height / 6
                 width: leftMenuBar.width
-                color: isSelected(4) ? "#ff1a1a" : "#424242"
+                color: isSelected(4) ? "#555555" : "#333333"
 
                 Label{
                     color: "white"
@@ -148,7 +148,7 @@ Item {
                 id: score_button
                 height: leftMenuBar.height / 6
                 width: leftMenuBar.width
-                color: isSelected(5) ? "#ff1a1a" : "#424242"
+                color: isSelected(5) ? "#555555" : "#333333"
 
                 Column{
                     //height: parent.height
@@ -165,7 +165,7 @@ Item {
                     Label{
                         color: "white"
                         text: zmqClient.score
-                        font.pixelSize: (leftMenuBar.width / 2)
+                        font.pixelSize: (leftMenuBar.width / 3)
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
                 }
@@ -180,10 +180,3 @@ Item {
         }
     }
 }
-
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:600;width:800}
-}
-##^##*/
