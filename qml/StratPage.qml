@@ -91,12 +91,12 @@ Page {
     
     // Available start zones
 
-    // Top left
+    // Bottom left
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(1) ? "#55FF0000" : "#00FF0000"
-        anchors.top: parent.top
+        color: isPlateSelected(1) ? "#5500FF00" : "#0000FF00"
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
 
         Label {
@@ -116,13 +116,14 @@ Page {
         }
     }
 
-    // Top right
+    // Left middle
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(2) ? "#55FF0000" : "#00FF0000"
-        anchors.top: parent.top
-        anchors.right: parent.right
+        color: isPlateSelected(2) ? "#5500FF00" : "#0000FF00"
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        //anchors.topMargin:parent.height * 0.25
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -141,14 +142,13 @@ Page {
         }
     }
 
-    // Right middle
+    // Top left
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(3) ? "#55FF0000" : "#00FF0000"
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.right: parent.right
-        //anchors.topMargin:parent.height * 0.25
+        color: isPlateSelected(3) ? "#5500FF00" : "#0000FF00"
+        anchors.top: parent.top
+        anchors.left: parent.left
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -167,12 +167,12 @@ Page {
         }
     }
 
-    // Bottom right
+    // Top right
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(4) ? "#55FF0000" : "#00FF0000"
-        anchors.bottom: parent.bottom
+        color: isPlateSelected(4) ? "#5500FF00" : "#0000FF00"
+        anchors.top: parent.top
         anchors.right: parent.right
 
         Label {
@@ -192,13 +192,14 @@ Page {
         }
     }
 
-    // Bottom left
+    // Right middle
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(5) ? "#55FF0000" : "#00FF0000"
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
+        color: isPlateSelected(5) ? "#5500FF00" : "#0000FF00"
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+        //anchors.topMargin:parent.height * 0.25
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -217,14 +218,13 @@ Page {
         }
     }
 
-    // Left middle
+    // Bottom right
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(6) ? "#55FF0000" : "#00FF0000"
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: parent.left
-        //anchors.topMargin:parent.height * 0.25
+        color: isPlateSelected(6) ? "#5500FF00" : "#0000FF00"
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -243,40 +243,41 @@ Page {
         }
     }
 
+
     // Start pos display
-    /*
+
     Image {
-        source: "../res/arrow.png"
+        source: "../res/arrow90.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
         visible: isPlateSelected(1)
-        x: 0.20 * parent.width / 3.000 - width/2
-        y: (1.00 - 0.8)  * parent.height / 2.000 - height / 2
+        x: 0.25 * parent.width / 3.000 - width/2
+        y: (1.75)  * parent.height / 2.000 - height / 2
     }
 
     Image {
-        source: "../res/arrow.png"
+        source: "../res/arrow90.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
-        visible: isPlateSelected(2) || isPlateSelected(9)
-        x: 0.20 * parent.width / 3.000 - width/2
-        y: 1.00 * parent.height / 2.000 - height / 2
+        visible: isPlateSelected(2)
+        x: 0.70 * parent.width / 3.000 - width/2
+        y: 1.75 * parent.height / 2.000 - height / 2
     }
 
     Image {
-        source: "../res/arrow180.png"
+        source: "../res/arrow270.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
         visible: isPlateSelected(3)
-        x: 2.80 * parent.width / 3.000 - width/2
-        y: (1.00 - 0.275) * parent.height / 2.000 - height / 2
+        x: 0.25 * parent.width / 3.000 - width/2
+        y: 0.25 * parent.height / 2.000 - height / 2
     }
 
     Image {
-        source: "../res/arrow180.png"
+        source: "../res/arrow270.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
@@ -286,13 +287,13 @@ Page {
     }
 
     Image {
-        source: "../res/arrow270.png"
+        source: "../res/arrow90.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
         visible: isPlateSelected(5)
-        x: 1.875 * parent.width / 3.000 - width/2
-        y: (1.00 - 0.80) * parent.height / 2.000 - height / 2
+        x: 2.3 * parent.width / 3.000 - width/2
+        y: 1.75 * parent.height / 2.000 - height / 2
     }
 
     Image {
@@ -301,40 +302,9 @@ Page {
         width: parent.width / 5
         height: parent.height / 3
         visible: isPlateSelected(6)
-        x: 1.875 * parent.width / 3.000 - width/2
+        x: 2.75 * parent.width / 3.000 - width/2
         y: (1.00 + 0.80) * parent.height / 2.000 - height / 2
     }
-
-    Image {
-        source: "../res/arrow180.png"
-        opacity: 0.7
-        width: parent.width / 5
-        height: parent.height / 3
-        visible: isPlateSelected(7)
-        x: 2.80 * parent.width / 3.000 - width/2
-        y: (1.00 + 0.8) * parent.height / 2.000 - height / 2
-    }
-
-    Image {
-        source: "../res/arrow180.png"
-        opacity: 0.7
-        width: parent.width / 5
-        height: parent.height / 3
-        visible: isPlateSelected(8)
-        x: 2.80 * parent.width / 3.000 - width/2
-        y: (1.00 + 0.275) * parent.height / 2.000 - height / 2
-    }
-
-
-    Image {
-        source: "../res/arrow.png"
-        opacity: 0.7
-        width: parent.width / 5
-        height: parent.height / 3
-        visible: isPlateSelected(10)
-        x: 0.20 * parent.width / 3.000 - width/2
-        y: (1.00 + 0.8)  * parent.height / 2.000 - height / 2
-    }*/
 
     // Robot position
     Image {
