@@ -119,7 +119,7 @@ Page {
     }
 
     function isStartPlateUndefined(){
-        if (zmqClient.start_plate_selected == 0) {
+        if (zmqClient.start_zone_selected == 0) {
             return true
         }
         else{

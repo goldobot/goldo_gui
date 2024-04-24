@@ -48,35 +48,6 @@ class RobotDetection(QObject):
     @pyqtProperty(int, constant=True)
     def quality(self):
         return self._quality
-    
-class Cake(QObject):
-    def __init__(self, cid, cx, cy, ccolor, chere, parent=None):
-        super().__init__(parent)
-        self._id = cid
-        self._x = cx
-        self._y = cy
-        self._color = ccolor
-        self._here = chere
-
-    @pyqtProperty(int, constant=True)
-    def id(self):
-        return self._id
-
-    @pyqtProperty(float, constant=True)
-    def x(self):
-        return self._x
-
-    @pyqtProperty(float, constant=True)
-    def y(self):
-        return self._y
-    
-    @pyqtProperty(int, constant=True)
-    def color(self):
-        return self._color
-    
-    @pyqtProperty(bool, constant=True)
-    def here(self):
-        return self._here
 
 class ZmqClient(QObject, ZmqCodecMixin):
     # STM32 signals
@@ -102,7 +73,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
     # Table signals
     notifyRobotPose = pyqtSignal()
     notifyRobotDetect = pyqtSignal()
-    notifyCakes = pyqtSignal()
 
     # RPLidar signals
     notifyRPLidar = pyqtSignal()
@@ -131,7 +101,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
                             self._ip_address = self._ip_address + t + " : " + tok[1]
                             self.notifyIpAddress.emit()
         except:
-            print("ip command not available")
+            self._ip_address = "127.0.0.1"
         finally:
             print(self._ip_address)
 
@@ -147,7 +117,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def _send_side(self):
         msg = Int32Value(value=self._side)
         self.publishTopic('gui/out/side', msg)
-        msg = Int32Value(value=self._start_plate_selected)
+        msg = Int32Value(value=self._start_zone_selected)
         self.publishTopic('gui/out/start_zone', msg)
 
     def __init__(self, parent=None):
@@ -156,28 +126,18 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         # connect to the pub socket of goldo_main and set topic subscribe filter
         self._sub_socket = self._context.socket(zmq.SUB)
-        #self._sub_socket.connect('tcp://localhost:3801')
-        self._sub_socket.connect('tcp://robot01:3801')
+        self._sub_socket.connect('tcp://localhost:3801')
         self._sub_socket.setsockopt(zmq.SUBSCRIBE,b'gui/in/')
-
-        # connect to other robot
-        self._secondary_socket = self._context.socket(zmq.SUB)
-        self._secondary_socket.connect('tcp://robot02:3801')
-        self._secondary_socket.setsockopt(zmq.SUBSCRIBE,b'gui/in/')
 
         # connect to the sub socket of goldo_main
         self._pub_socket = self._context.socket(zmq.PUB)
-        #self._pub_socket.connect('tcp://localhost:3802')
-        self._pub_socket.connect('tcp://robot01:3802')
+        self._pub_socket.connect('tcp://localhost:3802')
 
         # create notifier socket
         self._pub_monitor_socket = self._pub_socket.get_monitor_socket()
 
         self._notifier = QSocketNotifier(self._sub_socket.getsockopt(zmq.FD), QSocketNotifier.Read, self)
         self._notifier.activated.connect(self._on_sub_socket_event)
-
-        self._notifier = QSocketNotifier(self._secondary_socket.getsockopt(zmq.FD), QSocketNotifier.Read, self)
-        self._notifier.activated.connect(self._on_secondary_socket_event)
 
         self._notifier_monitor = QSocketNotifier(self._pub_monitor_socket.getsockopt(zmq.FD), QSocketNotifier.Read, self)
         self._notifier_monitor.activated.connect(self._on_monitor_socket_event)
@@ -224,16 +184,11 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._robot_pose._y = 0
         self._robot_pose._yaw = 0
         self._robot_detection = []
-        self._cakes = []
 
-        self._secondary_robot_pose = RobotPose()
-        self._secondary_robot_pose._x = 2.5
-        self._secondary_robot_pose._y = 0
-        self._secondary_robot_pose._yaw = 3.1415
 
         # Others
         self._gui_screen_selected = 0
-        self._start_plate_selected = 0
+        self._start_zone_selected = 0
         self._ip_address = "127.0.0.1"
         self._ip_timer = QTimer(self)
         self._ip_timer.timeout.connect(self._read_ip)
@@ -261,14 +216,14 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
     @pyqtSlot(int)
     def selectPlate(self, value):
-        if value == self._start_plate_selected:
+        if value == self._start_zone_selected:
             return
         elif self._side == 1 and value % 2 == 0 and value != 0:
-            self._start_plate_selected = value
+            self._start_zone_selected = value
         elif self._side == 2 and value % 2 == 1:
-            self._start_plate_selected = value
+            self._start_zone_selected = value
         elif value == 0:
-            self._start_plate_selected = value
+            self._start_zone_selected = value
         else:
             return
         
@@ -293,22 +248,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
                 self._on_pub_client_connected()
             flags = self._pub_monitor_socket.getsockopt(zmq.EVENTS)
 
-    def _on_secondary_socket_event(self):
-        self._notifier.setEnabled(False)
-        flags = self._secondary_socket.getsockopt(zmq.EVENTS)
-        while flags & zmq.POLLIN:
-            topic, msg  = self._decodeTopic(self._secondary_socket.recv_multipart())
-            self._on_secondary_message_received(topic, msg)
-            flags = self._secondary_socket.getsockopt(zmq.EVENTS)
-        self._notifier.setEnabled(True)
-
-        flags = self._pub_monitor_socket.getsockopt(zmq.EVENTS)
-        while flags & zmq.POLLIN:
-            evt = recv_monitor_message(self._pub_monitor_socket)
-            if evt['event'] == zmq.EVENT_CONNECTED:
-                self._on_pub_client_connected()
-            flags = self._pub_monitor_socket.getsockopt(zmq.EVENTS)
-
     def _on_monitor_socket_event(self):
         self._notifier_monitor.setEnabled(False)
         flags = self._pub_monitor_socket.getsockopt(zmq.EVENTS)
@@ -323,17 +262,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
         print('client connected')
         self.setSide(self.side)
         self.setOpponentsNumber(self.opponents_number)
-
-    def _on_secondary_message_received(self, topic, msg):
-        if topic == 'gui/in/robot_state':
-            self._secondary_robot_pose._x = msg.robot_pose.position.x
-            self._secondary_robot_pose._y = msg.robot_pose.position.y
-            self._secondary_robot_pose._yaw = msg.robot_pose.yaw
-            self.notifyRobotPose.emit()
-            self.publishTopic('gui/out/robot_state', msg)
-        
-        if topic == 'gui/in/clear_field':
-            self.publishTopic('gui/out/clear_field', msg)
 
     def _on_message_received(self, topic, msg):
         # State message
@@ -390,17 +318,11 @@ class ZmqClient(QObject, ZmqCodecMixin):
                 self._odrv_axis1_error = False
             self.notifyODrive.emit()
 
-            #Table
+            # Table
             self._robot_pose._x = msg.robot_pose.position.x
             self._robot_pose._y = msg.robot_pose.position.y
             self._robot_pose._yaw = msg.robot_pose.yaw
             self.notifyRobotPose.emit()
-
-            self._cakes = []
-            for cake in msg.table.cakes:
-                _cake = Cake(cake.id, cake.pose.x, cake.pose.y, cake.color, cake.here)
-                self._cakes.append(_cake)
-            self.notifyCakes.emit()
 
             # Match
             self._match_state = msg.match_state
@@ -479,10 +401,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def nucleo_responding(self):
         return self._nucleo_responding
     
-    @pyqtProperty(QQmlListProperty, notify=notifyCakes)
-    def cakes(self):
-        return QQmlListProperty(Cake, self, self._cakes)
-
     # Match properties
     def setSide(self, side):
         if self._side != side:
@@ -596,32 +514,14 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(RobotDetection, notify=notifyRobotDetect)
     def robot_detection3(self):
         return self._robot_detection[2]
-    
-    #secondary robot
-        # Table properties
-    @pyqtProperty(RobotPose, notify=notifyRobotPose)
-    def secondary_robot_pose(self):
-        return self._secondary_robot_pose
-
-    @pyqtProperty(float, notify=notifyRobotPose)
-    def secondary_robot_pose_x(self):
-        return self._secondary_robot_pose.x
-
-    @pyqtProperty(float, notify=notifyRobotPose)
-    def secondary_robot_pose_y(self):
-        return self._secondary_robot_pose.y
-
-    @pyqtProperty(float, notify=notifyRobotPose)
-    def secondary_robot_pose_yaw(self):
-        return self._secondary_robot_pose.yaw
 
     @pyqtProperty(int, notify=notifyScreenSelected)
     def gui_screen_selected(self):
         return self._gui_screen_selected
 
     @pyqtProperty(int, notify=notifyPlateSelected)
-    def start_plate_selected(self):
-        return self._start_plate_selected
+    def start_zone_selected(self):
+        return self._start_zone_selected
 
     @pyqtProperty(str, notify=notifyIpAddress)
     def ip_address(self):

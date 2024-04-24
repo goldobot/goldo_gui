@@ -29,7 +29,7 @@ Item {
     }
 
     function getVisionStatus(){
-        return true
+        return false
     }
 
     function blinkHeartbeat(){

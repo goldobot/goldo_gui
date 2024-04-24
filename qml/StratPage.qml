@@ -17,32 +17,9 @@ Page {
             return true
         }
     }
-
-
-    function cakeVisible(here){
-        if(here == true){
-            return true
-        }
-        return false
-    }
     
-    function cakeType(color){
-        switch(color) {
-            case 0:
-                return "../res/unknown_cake.png"
-            case 1:
-                return "../res/brown_cake.png"
-            case 2:
-                return "../res/yellow_cake.png"
-            case 3:
-                return "../res/pink_cake.png"
-            case 4:
-                return "../res/perfect_cake.png"
-        }
-    }
-    
-    function isPlateSelected(index){
-        if(index == zmqClient.start_plate_selected)
+    function isStartZoneSelected(index){
+        if(index == zmqClient.start_zone_selected)
             return true
         else
             return false
@@ -75,27 +52,13 @@ Page {
         }
     }
 
-    // Lidar detections
-    Repeater{
-        model: zmqClient.cakes
-        // Robot position
-        Image {
-            source: cakeType(modelData.color)
-            width: 0.12 * parent.width / 3.000
-            height: 0.12 * parent.height / 2.000
-            x: modelData.x * parent.width / 3.000 - width/2
-            y: (modelData.y+1.000) * parent.height / 2.000 - height / 2
-            visible: cakeVisible(modelData.here)
-        }
-    }
-    
     // Available start zones
 
     // Bottom left
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(1) ? "#5500FF00" : "#0000FF00"
+        color: isStartZoneSelected(1) ? "#5500FF00" : "#0000FF00"
         anchors.bottom: parent.bottom
         anchors.left: parent.left
 
@@ -120,10 +83,9 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(2) ? "#5500FF00" : "#0000FF00"
+        color: isStartZoneSelected(2) ? "#5500FF00" : "#0000FF00"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-        //anchors.topMargin:parent.height * 0.25
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -146,7 +108,7 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(3) ? "#5500FF00" : "#0000FF00"
+        color: isStartZoneSelected(3) ? "#5500FF00" : "#0000FF00"
         anchors.top: parent.top
         anchors.left: parent.left
 
@@ -171,7 +133,7 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(4) ? "#5500FF00" : "#0000FF00"
+        color: isStartZoneSelected(4) ? "#5500FF00" : "#0000FF00"
         anchors.top: parent.top
         anchors.right: parent.right
 
@@ -196,7 +158,7 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(5) ? "#5500FF00" : "#0000FF00"
+        color: isStartZoneSelected(5) ? "#5500FF00" : "#0000FF00"
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         //anchors.topMargin:parent.height * 0.25
@@ -222,7 +184,7 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: isPlateSelected(6) ? "#5500FF00" : "#0000FF00"
+        color: isStartZoneSelected(6) ? "#5500FF00" : "#0000FF00"
         anchors.bottom: parent.bottom
         anchors.right: parent.right
 
@@ -251,7 +213,7 @@ Page {
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
-        visible: isPlateSelected(1)
+        visible: isStartZoneSelected(1)
         x: 0.25 * parent.width / 3.000 - width/2
         y: (1.75)  * parent.height / 2.000 - height / 2
     }
@@ -261,7 +223,7 @@ Page {
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
-        visible: isPlateSelected(2)
+        visible: isStartZoneSelected(2)
         x: 0.70 * parent.width / 3.000 - width/2
         y: 1.75 * parent.height / 2.000 - height / 2
     }
@@ -271,7 +233,7 @@ Page {
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
-        visible: isPlateSelected(3)
+        visible: isStartZoneSelected(3)
         x: 0.25 * parent.width / 3.000 - width/2
         y: 0.25 * parent.height / 2.000 - height / 2
     }
@@ -281,7 +243,7 @@ Page {
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
-        visible: isPlateSelected(4)
+        visible: isStartZoneSelected(4)
         x: 2.80 * parent.width / 3.000 - width/2
         y: (1.00 - 0.8) * parent.height / 2.000 - height / 2
     }
@@ -291,7 +253,7 @@ Page {
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
-        visible: isPlateSelected(5)
+        visible: isStartZoneSelected(5)
         x: 2.3 * parent.width / 3.000 - width/2
         y: 1.75 * parent.height / 2.000 - height / 2
     }
@@ -301,7 +263,7 @@ Page {
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
-        visible: isPlateSelected(6)
+        visible: isStartZoneSelected(6)
         x: 2.75 * parent.width / 3.000 - width/2
         y: (1.00 + 0.80) * parent.height / 2.000 - height / 2
     }
