@@ -50,6 +50,9 @@ class RobotDetection(QObject):
         return self._quality
 
 class ZmqClient(QObject, ZmqCodecMixin):
+    # Propulsion telemetry signals
+    notifyPropulsionTelemetry = pyqtSignal()
+
     # STM32 signals
     notifyHeartbeat = pyqtSignal()
     notifyConfigStatus = pyqtSignal()
@@ -141,6 +144,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         self._notifier_monitor = QSocketNotifier(self._pub_monitor_socket.getsockopt(zmq.FD), QSocketNotifier.Read, self)
         self._notifier_monitor.activated.connect(self._on_monitor_socket_event)
+
+        # Propulsion telemetry variables
+        self._propulsionControllerState = 0
+        self._propulsionControllerError = 0
 
         # STM variables
         self._heartbeat = 0
@@ -360,6 +367,12 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self._nucleo_watchdog_timer.stop()
             self.notifyConfigStatus.emit()
 
+        # propulsion telemetry messages
+        if topic == 'nucleo/out/propulsion/telemetry':
+            self._propulsionControllerState = msg.state
+            self._propulsionControllerError = msg.error
+            self.propulsion_telemetry.emit()
+
         # Match messages
         if topic == 'gui/in/side':
             self._side = msg.value
@@ -377,16 +390,31 @@ class ZmqClient(QObject, ZmqCodecMixin):
                 if self._match_timer < 5:
                     self._gui_screen_selected = 5
                     self.notifyScreenSelected.emit()
+
         # Sensors messages
         if topic == 'gui/in/sensors/start_match':
             self._tirette = msg.value
             self.notifyTirette.emit()
+
+        if topic == 'nucleo/in/propulsion/emergency_stop':
+            self._rplidar_detection = true
+            self._rplidar_detection_timer.singleShot(3000, self._detection_timeout)
+            self.notifyRPLidarDetection.emit()
 
         # Camera messages
         if topic == 'gui/in/camera/image':
             self.cameraFrameReceived.emit(msg)
         if topic == 'gui/in/camera/detections':
             self.cameraDetectionsReceived.emit(msg)
+
+    # Propulsion telemetry properties
+    @pyqtProperty(int, notify=notifyPropulsionTelemetry)
+    def propulsionControllerState(self):
+        return self._propulsionControllerState
+
+    @pyqtProperty(int, notify=notifyPropulsionTelemetry)
+    def propulsionControllerError(self):
+        return self._propulsionControllerError
 
     # STM properties
     @pyqtProperty("unsigned long long", notify=notifyHeartbeat)

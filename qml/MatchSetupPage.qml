@@ -71,6 +71,66 @@ Page {
         }
     }
 
+    //Propulsion button color
+    function getPropulsionColor(textColor){
+        if(!textColor){
+            switch(zmqClient.propulsionControllerState) {
+                case 0:
+                    return 'lightgray'; // Inactive
+                case 1:
+                    return 'lightgreen'; // Stopped
+                case 7:
+                    return 'red'; // Error
+                default:
+                    return 'green'; // Moving
+            }
+        }
+        else {
+            switch(zmqClient.propulsionControllerState) {
+                case 0:
+                case 1:
+                    return 'black'; // Inactive or stopped
+                default:
+                    return 'white'; // Error or moving
+            }
+        }
+    }
+
+    function getPropulsionStatus(){
+        if(zmqClient.propulsionControllerState == 7) {
+            switch(zmqClient.propulsionControllerError){
+                case 1:
+                    return 'EMERGENCY STOP';
+                case 2:
+                    return 'ROBOT BLOCKED';
+                case 3:
+                    return 'TRACKING ERROR';
+                default:
+                    return 'ERROR';
+            }
+        }
+        else {
+            switch(zmqClient.propulsionControllerState){
+                case 0:
+                    return 'Inactive';
+                case 1:
+                    return 'Stopped';
+                case 2:
+                    return 'Trajectory';
+                case 3:
+                    return 'Rotate';
+                case 4:
+                    return 'Reposition';
+                case 5:
+                    return 'Manual';
+                case 6:
+                    return 'Emergency stop';
+                default:
+                    return 'Unknown';
+            }
+        }
+    }
+
     //Odrive button color
     function getOdrvColor(textColor){
         if(!textColor){
@@ -106,6 +166,31 @@ Page {
             else{
                 return 'white'
             }
+        }
+    }
+
+    function odrvStateToStr(state) {
+        switch(state){
+            case 0:
+                return 'Undef';
+            case 1:
+                return 'Idle';
+            case 2:
+                return 'Start';
+            case 3:
+                return 'Full Calib';
+            case 4:
+                return 'Mot Calib';
+            case 6:
+                return 'Find idx';
+            case 7:
+                return 'Enc Calib';
+            case 8:
+                return 'Control';
+            case 9:
+                return 'Lockin';
+            default:
+                return 'Unknown';
         }
     }
 
@@ -205,7 +290,7 @@ Page {
                 Layout.rowSpan: 1
                 Label {
                     color: zmqClient.config_status ? 'white' : 'black'
-                    text: "Config nucleo"
+                    text: "Config Nucleo"
                     font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -240,38 +325,16 @@ Page {
                 }
             }
 
-            // Odrive calibration button
+            // Propulsion
             Rectangle {
-                color: getOdrvColor(false)
+                color: getPropulsionColor(false)
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 1
                 Layout.rowSpan: 1
                 Label {
-                    color: getOdrvColor(true)
-                    text: "ODrive : " + zmqClient.odrv_axis0_state + " | " + zmqClient.odrv_axis1_state
-                    font.pixelSize: 32
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-				MouseArea {
-                    anchors.fill: parent
-                    onClicked: { zmqClient.odriveCalibration() }
-                }
-            }
-
-            // Opponents number
-            Rectangle {
-                color: "#888888"
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.columnSpan: 1
-                Layout.rowSpan: 1
-                Label {
-                    color: "black"
-                    text: "Opponents : " + zmqClient.opponents_number
+                    color: getPropulsionColor(true)
+                    text: "Propulsion :\n" + getPropulsionStatus()
                     font.pixelSize: 32
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -288,6 +351,28 @@ Page {
                             zmqClient.opponents_number = 1
                         }
                     }
+                }
+            }
+
+            // Odrive calibration button
+            Rectangle {
+                color: getOdrvColor(false)
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.columnSpan: 1
+                Layout.rowSpan: 1
+                Label {
+                    color: getOdrvColor(true)
+                    text: "ODrive :\n" + odrvStateToStr(zmqClient.odrv_axis0_state) + " | " + odrvStateToStr(zmqClient.odrv_axis1_state)
+                    font.pixelSize: 32
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+				MouseArea {
+                    anchors.fill: parent
+                    onClicked: { zmqClient.odriveCalibration() }
                 }
             }
 
