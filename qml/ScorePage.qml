@@ -26,8 +26,8 @@ Page {
         styleColor : "black"
         anchors.top: parent.top
         anchors.right: parent.right
-        font.pixelSize: 80
-        text: zmqClient.match_timer
+        anchors.rightMargin:10
+        font.pixelSize: 60
+        text: "Time : " + zmqClient.match_timer
     }
 }
-
