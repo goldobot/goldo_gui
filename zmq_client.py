@@ -184,6 +184,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         # RPLidar variables
         self._rplidar_running = False
+        self._rplidar_detection_timer = QTimer(self)
 
         # Table variables
         self._robot_pose = RobotPose()
@@ -396,7 +397,8 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self._tirette = msg.value
             self.notifyTirette.emit()
 
-        if topic == 'rplidar/out/emergency_raise':
+        if topic == 'gui/in/emergency_raise':
+            print (topic)
             _screen = self._gui_screen_selected
             self._rplidar_detection_timer.singleShot(1500, lambda: self.selectScreen(_screen))
             self.selectScreen(6)
