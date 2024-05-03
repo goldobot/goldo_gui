@@ -45,6 +45,8 @@ ApplicationWindow {
       }
       ScorePage {        
       }
+      DetectionAlertPage {
+      }
     }    
 }
 

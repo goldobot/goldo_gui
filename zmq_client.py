@@ -396,10 +396,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self._tirette = msg.value
             self.notifyTirette.emit()
 
-        if topic == 'nucleo/in/propulsion/emergency_stop':
-            self._rplidar_detection = true
-            self._rplidar_detection_timer.singleShot(3000, self._detection_timeout)
-            self.notifyRPLidarDetection.emit()
+        if topic == 'rplidar/out/emergency_raise':
+            _screen = self._gui_screen_selected
+            self._rplidar_detection_timer.singleShot(1500, lambda: self.selectScreen(_screen))
+            self.selectScreen(6)
 
         # Camera messages
         if topic == 'gui/in/camera/image':
