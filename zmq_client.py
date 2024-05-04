@@ -400,7 +400,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
         if topic == 'gui/in/emergency_raise':
             print (topic)
             _screen = self._gui_screen_selected
-            self._rplidar_detection_timer.singleShot(1500, lambda: self.selectScreen(_screen))
+            self._rplidar_detection_timer.singleShot(1500, lambda: self.selectScreen(5 if self._match_timer < 5 else _screen))
             self.selectScreen(6)
 
         # Camera messages
