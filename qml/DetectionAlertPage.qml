@@ -16,6 +16,6 @@ Page {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 96
-        text: "DETECTION\n" + "AVANT" 
+        text: "DETECTION !"
     }
 }
