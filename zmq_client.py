@@ -229,6 +229,11 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self.publishTopic('robot/sequence/test_turbines/execute', msg)
 
     @pyqtSlot(int)
+    def center_slot(self, value):
+        msg = Int32Value(value=0)
+        self.publishTopic('robot/sequence/center_slot{}/execute'.format(value), msg)
+
+    @pyqtSlot(int)
     def selectScreen(self, value):
         self._gui_screen_selected = value
         self.notifyScreenSelected.emit()

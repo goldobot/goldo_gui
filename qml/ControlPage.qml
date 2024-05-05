@@ -12,13 +12,13 @@ Page {
             columnSpacing: 5
             rowSpacing: 5
             rows: 6
-            columns: 1
+            columns: 10
 
             Rectangle {
                 color: 'lightgray'
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                Layout.columnSpan: 1
+                Layout.columnSpan: 10
                 Layout.rowSpan: 1
                 Label {
                     color: 'black'
@@ -39,7 +39,7 @@ Page {
                 color: 'lightgray'
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                Layout.columnSpan: 1
+                Layout.columnSpan: 10
                 Layout.rowSpan: 1
                 Label {
                     color: 'black'
@@ -54,57 +54,46 @@ Page {
                     anchors.fill: parent
                     onClicked: { zmqClient.test_turbines() }
                 }
-            }   
+            }
 
-            Rectangle {
-                color: zmqClient.left_lift ? 'green' : 'lightgray'
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.columnSpan: 1
-                Layout.rowSpan: 1
-                Label {
-                    color: zmqClient.left_lift ? 'white' : 'black'
-                    text: "Ascenseur G"
-                    font.pixelSize: 24
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
+            Repeater {
+                model:10
+                Rectangle {
+                    color: 'lightgray'
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.columnSpan: 1
+                    Layout.rowSpan: 1
+                    Label {
+                        color: zmqClient.left_lift ? 'white' : 'black'
+                        text: index + 1
+                        font.pixelSize: 24
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: { zmqClient.center_slot(index + 1) }
+                    }
                 }
             }
 
             Rectangle {
-                color: zmqClient.right_lift ? 'green' : 'lightgray'
+                color: 'lightgray'
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                Layout.columnSpan: 1
+                Layout.columnSpan: 10
                 Layout.rowSpan: 1
-                Label {
-                    color: zmqClient.right_lift ? 'white' : 'black'
-                    text: "Ascenseur D"
-                    font.pixelSize: 24
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                }
             }
 
             Rectangle {
-                color: zmqClient.tirette ? 'green' : 'lightgray'
+                color: 'lightgray'
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                Layout.columnSpan: 1
+                Layout.columnSpan: 10
                 Layout.rowSpan: 1
-                Label {
-                    color: zmqClient.tirette ? 'white' : 'black'
-                    text: "Tirette"
-                    font.pixelSize: 24
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                }
             }    
         }
     }
