@@ -34,10 +34,7 @@ ApplicationWindow {
       }
       StratPage {
       }
-      Rectangle {
-          color: 'red'
-          height: parent.height
-          width: parent.width
+      ControlPage {
       }
       StatusPage {
       }

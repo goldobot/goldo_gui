@@ -181,6 +181,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._pavillon = True
         self._left_lift = False
         self._right_lift = False
+        self._sensors = None
 
         # RPLidar variables
         self._rplidar_running = False
@@ -216,6 +217,16 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def odriveCalibration(self):
         msg = Int32Value(value=0)
         self.publishTopic('nucleo/in/propulsion/calibrate_odrive', msg)
+
+    @pyqtSlot()
+    def empty_carrousel(self):
+        msg = Int32Value(value=0)
+        self.publishTopic('robot/sequence/empty_carousel/execute', msg)
+
+    @pyqtSlot()
+    def test_turbines(self):
+        msg = Int32Value(value=0)
+        self.publishTopic('robot/sequence/test_turbines/execute', msg)
 
     @pyqtSlot(int)
     def selectScreen(self, value):
@@ -286,6 +297,7 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
             # Sensors
             self._tirette = msg.sensors["tirette"]
+            self._sensors = msg.sensors
             self.notifyTirette.emit()
             self._emergency_stop = msg.sensors["emergency_stop"]
             self.notifyEmergencyStop.emit()
