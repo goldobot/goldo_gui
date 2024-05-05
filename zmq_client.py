@@ -369,10 +369,10 @@ class ZmqClient(QObject, ZmqCodecMixin):
             self.notifyConfigStatus.emit()
 
         # propulsion telemetry messages
-        if topic == 'nucleo/out/propulsion/telemetry':
+        if topic == 'gui/in/robot_telemetry':
             self._propulsionControllerState = msg.state
             self._propulsionControllerError = msg.error
-            self.propulsion_telemetry.emit()
+            self.notifyPropulsionTelemetry.emit()
 
         # Match messages
         if topic == 'gui/in/side':
