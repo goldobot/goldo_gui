@@ -233,6 +233,16 @@ class ZmqClient(QObject, ZmqCodecMixin):
         msg = Int32Value(value=0)
         self.publishTopic('robot/sequence/center_slot{}/execute'.format(value), msg)
 
+    @pyqtSlot()
+    def check_actionneurs(self):
+        msg = Int32Value(value=0)
+        self.publishTopic('robot/sequence/check_up_actionneurs/execute', msg)
+
+    @pyqtSlot()
+    def change_zone(self):
+        msg = Int32Value(value=0)
+        self.publishTopic('robot/sequence/change_zone/execute', msg)
+
     @pyqtSlot(int)
     def selectScreen(self, value):
         self._gui_screen_selected = value
