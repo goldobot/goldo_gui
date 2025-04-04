@@ -27,7 +27,7 @@ Page {
 
     // Table vinyl
     Image {
-        source: "../res/table.png"
+        source: "../res/table.svg"
         anchors.fill : parent
     }
 
@@ -40,8 +40,8 @@ Page {
             radius: width / 2
             color: "lavender"
             visible: detectionVisible(modelData.x, modelData.y, modelData.quality)
-            x: modelData.x * parent.width / 3.000 - width/2
-            y: (modelData.y+1.000) * parent.height / 2.000 - height / 2
+            x: (modelData.y+1.500) * parent.width / 3.000 - width/2
+            y: (modelData.x) * parent.height / 2.000 - height / 2
             Label {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -53,14 +53,14 @@ Page {
     }
 
     // Available start zones
-
     // Bottom left
     Rectangle{
         width: square_width
         height: square_height
-        color: isStartZoneSelected(1) ? "#5500FF00" : "#0000FF00"
+        color: isStartZoneSelected(1) ? "#AAFFCC88" : "#55FFFFFF"
         anchors.bottom: parent.bottom
         anchors.left: parent.left
+        anchors.leftMargin:parent.width * 0.335
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -69,6 +69,16 @@ Page {
             opacity: 0.5
             color: "black"
             text: "1"
+        }
+        Label {
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.rightMargin:parent.width/10
+            anchors.bottomMargin:parent.height/30
+            font.pixelSize: parent.height / 6
+            opacity: 1
+            color: "white"
+            text: "ZoneDA_J"
         }
         
         MouseArea {
@@ -79,13 +89,14 @@ Page {
         }
     }
 
-    // Left middle
+    // Middle left
     Rectangle{
         width: square_width
         height: square_height
-        color: isStartZoneSelected(2) ? "#5500FF00" : "#0000FF00"
-        anchors.verticalCenter: parent.verticalCenter
+        color: isStartZoneSelected(2) ? "#AA3333FF" : "#55FFFFFF"
+        anchors.top: parent.top
         anchors.left: parent.left
+        anchors.topMargin: parent.height * 0.45
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -94,6 +105,16 @@ Page {
             opacity: 0.5
             color: "black"
             text: "2"
+        }
+        Label {
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.rightMargin:parent.width/10
+            anchors.bottomMargin:parent.height/30
+            font.pixelSize: parent.height / 6
+            opacity: 1
+            color: "white"
+            text: "ZoneDL_B"
         }
         
         MouseArea {
@@ -108,9 +129,10 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: isStartZoneSelected(3) ? "#5500FF00" : "#0000FF00"
+        color: isStartZoneSelected(3) ? "#AAFFCC88" : "#55FFFFFF"
         anchors.top: parent.top
         anchors.left: parent.left
+        anchors.leftMargin:parent.width * 0.05
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -119,6 +141,16 @@ Page {
             opacity: 0.5
             color: "black"
             text: "3"
+        }
+        Label {
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.rightMargin:parent.width/10
+            anchors.bottomMargin:parent.height/30
+            font.pixelSize: parent.height / 6
+            opacity: 1
+            color: "white"
+            text: "ZoneA_J"
         }
         
         MouseArea {
@@ -133,9 +165,10 @@ Page {
     Rectangle{
         width: square_width
         height: square_height
-        color: isStartZoneSelected(4) ? "#5500FF00" : "#0000FF00"
+        color: isStartZoneSelected(4) ? "#AA3333FF" : "#55FFFFFF"
         anchors.top: parent.top
         anchors.right: parent.right
+        anchors.rightMargin:parent.width * 0.05
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -144,6 +177,16 @@ Page {
             opacity: 0.5
             color: "black"
             text: "4"
+        }
+        Label {
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.rightMargin:parent.width/10
+            anchors.bottomMargin:parent.height/30
+            font.pixelSize: parent.height / 6
+            opacity: 1
+            color: "white"
+            text: "ZoneA_B"
         }
         
         MouseArea {
@@ -154,14 +197,14 @@ Page {
         }
     }
 
-    // Right middle
+    // Middle right
     Rectangle{
         width: square_width
         height: square_height
-        color: isStartZoneSelected(5) ? "#5500FF00" : "#0000FF00"
-        anchors.verticalCenter: parent.verticalCenter
+        color: isStartZoneSelected(5) ? "#AAFFCC88" : "#55FFFFFF"
+        anchors.top: parent.top
         anchors.right: parent.right
-        //anchors.topMargin:parent.height * 0.25
+        anchors.topMargin: parent.height * 0.45
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -170,6 +213,16 @@ Page {
             opacity: 0.5
             color: "black"
             text: "5"
+        }
+        Label {
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.rightMargin:parent.width/10
+            anchors.bottomMargin:parent.height/30
+            font.pixelSize: parent.height / 6
+            opacity: 1
+            color: "white"
+            text: "ZoneDL_J"
         }
         
         MouseArea {
@@ -180,13 +233,14 @@ Page {
         }
     }
 
-    // Bottom right
+    // Top right
     Rectangle{
         width: square_width
         height: square_height
-        color: isStartZoneSelected(6) ? "#5500FF00" : "#0000FF00"
+        color: isStartZoneSelected(6) ? "#AA3333FF" : "#55FFFFFF"
         anchors.bottom: parent.bottom
         anchors.right: parent.right
+        anchors.rightMargin: parent.width*0.335
 
         Label {
             anchors.verticalCenter: parent.verticalCenter
@@ -195,6 +249,16 @@ Page {
             opacity: 0.5
             color: "black"
             text: "6"
+        }
+        Label {
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.rightMargin:parent.width/10
+            anchors.bottomMargin:parent.height/30
+            font.pixelSize: parent.height / 6
+            opacity: 1
+            color: "white"
+            text: "ZoneDA_B"
         }
         
         MouseArea {
@@ -207,24 +271,41 @@ Page {
 
 
     // Start pos display
-
     Image {
-        source: "../res/arrow90.png"
+        source: "../res/arrow270.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
         visible: isStartZoneSelected(1)
-        x: 0.25 * parent.width / 3.000 - width/2
-        y: (1.75)  * parent.height / 2.000 - height / 2
+        x: 0.50 * parent.width / 3.000 - width/2
+        y: (1.55)  * parent.height / 2.000 - height / 2
+    }
+
+    Rectangle{
+        width: (0.25) * parent.width / 3.000
+        height: (0.45) * parent.height / 2.000
+        color: "#CC943C3C"
+        visible: isStartZoneSelected(1)
+        x: 0.0* parent.width / 3.000 //- width/2
+        y: (1.6)  * parent.height / 2.000 - height / 2
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 4
+            opacity: 0.5
+            color: "white"
+            text: "CALE"
+        }
     }
 
     Image {
-        source: "../res/arrow90.png"
+        source: "../res/arrow180.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
         visible: isStartZoneSelected(2)
-        x: 0.70 * parent.width / 3.000 - width/2
+        x: 0.2 * parent.width / 3.000 - width/2
         y: 1.75 * parent.height / 2.000 - height / 2
     }
 
@@ -234,27 +315,63 @@ Page {
         width: parent.width / 5
         height: parent.height / 3
         visible: isStartZoneSelected(3)
-        x: 0.25 * parent.width / 3.000 - width/2
-        y: 0.25 * parent.height / 2.000 - height / 2
+        x: 0.50 * parent.width / 3.000 - width/2
+        y: (0.6)  * parent.height / 2.000 - height / 2
     }
 
-    Image {
-        source: "../res/arrow270.png"
-        opacity: 0.7
-        width: parent.width / 5
-        height: parent.height / 3
-        visible: isStartZoneSelected(4)
-        x: 2.80 * parent.width / 3.000 - width/2
-        y: (1.00 - 0.8) * parent.height / 2.000 - height / 2
+    Rectangle{
+        width: (0.25) * parent.width / 3.000
+        height: (0.45) * parent.height / 2.000
+        color: "#CC943C3C"
+        visible: isStartZoneSelected(3)
+        x: 0.0* parent.width / 3.000 //- width/2
+        y: (0.68)  * parent.height / 2.000 - height / 2
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 4
+            opacity: 0.5
+            color: "white"
+            text: "CALE"
+        }
     }
 
-    Image {
+        Image {
         source: "../res/arrow90.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
+        visible: isStartZoneSelected(4)
+        x: 2.50 * parent.width / 3.000 - width/2
+        y: (0.6)  * parent.height / 2.000 - height / 2
+    }
+
+    Rectangle{
+        width: (0.25) * parent.width / 3.000
+        height: (0.45) * parent.height / 2.000
+        color: "#CC943C3C"
+        visible: isStartZoneSelected(4)
+        x: 3.000* parent.width / 3.000 - width
+        y: (0.68)  * parent.height / 2.000 - height / 2
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 4
+            opacity: 0.5
+            color: "white"
+            text: "CALE"
+        }
+    }
+
+    Image {
+        source: "../res/arrow180.png"
+        opacity: 0.7
+        width: parent.width / 5
+        height: parent.height / 3
         visible: isStartZoneSelected(5)
-        x: 2.3 * parent.width / 3.000 - width/2
+        x: 2.8 * parent.width / 3.000 - width/2
         y: 1.75 * parent.height / 2.000 - height / 2
     }
 
@@ -264,8 +381,26 @@ Page {
         width: parent.width / 5
         height: parent.height / 3
         visible: isStartZoneSelected(6)
-        x: 2.75 * parent.width / 3.000 - width/2
-        y: (1.00 + 0.80) * parent.height / 2.000 - height / 2
+        x: 2.50 * parent.width / 3.000 - width/2
+        y: (1.55)  * parent.height / 2.000 - height / 2
+    }
+
+    Rectangle{
+        width: (0.25) * parent.width / 3.000
+        height: (0.45) * parent.height / 2.000
+        color: "#CC943C3C"
+        visible: isStartZoneSelected(6)
+        x: 3.00 * parent.width / 3.000 - width
+        y: (1.6) * parent.height / 2.000 - height / 2
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: parent.height / 4
+            opacity: 0.5
+            color: "white"
+            text: "CALE"
+        }
     }
 
     // Robot position
