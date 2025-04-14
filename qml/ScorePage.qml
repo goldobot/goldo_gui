@@ -1,9 +1,9 @@
 import QtQuick 2.4
 import QtQuick.Controls 2.4
 
-Page {    
+Page {
     Image {
-        source: "../res/Goldorak.jpg"
+        source: "../res/background/Goldorak.jpg"
         anchors.fill : parent
     }
 	Rectangle {
@@ -15,8 +15,8 @@ Page {
         color : "white"
         style : Text.Outline
         styleColor : "black"
-        anchors.horizontalCenter : parent.horizontalCenter 
-        anchors.verticalCenter  : parent.verticalCenter  
+        anchors.horizontalCenter : parent.horizontalCenter
+        anchors.verticalCenter  : parent.verticalCenter
         font.pixelSize: 320
         text: zmqClient.score
     }

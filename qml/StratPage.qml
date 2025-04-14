@@ -27,7 +27,7 @@ Page {
 
     // Table vinyl
     Image {
-        source: "../res/table.svg"
+        source: "../res/map/table.png"
         anchors.fill : parent
     }
 
@@ -272,7 +272,7 @@ Page {
 
     // Start pos display
     Image {
-        source: "../res/arrow270.png"
+        source: "../res/map/arrow270.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
@@ -300,7 +300,7 @@ Page {
     }
 
     Image {
-        source: "../res/arrow180.png"
+        source: "../res/map/arrow180.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
@@ -310,7 +310,7 @@ Page {
     }
 
     Image {
-        source: "../res/arrow270.png"
+        source: "../res/map/arrow270.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
@@ -338,7 +338,7 @@ Page {
     }
 
         Image {
-        source: "../res/arrow90.png"
+        source: "../res/map/arrow90.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
@@ -366,7 +366,7 @@ Page {
     }
 
     Image {
-        source: "../res/arrow180.png"
+        source: "../res/map/arrow180.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
@@ -376,7 +376,7 @@ Page {
     }
 
     Image {
-        source: "../res/arrow90.png"
+        source: "../res/map/arrow90.png"
         opacity: 0.7
         width: parent.width / 5
         height: parent.height / 3
@@ -406,7 +406,7 @@ Page {
     // Robot position
     Image {
         id: robot_shape
-        source: "../res/robot.png"
+        source: "../res/map/robot.png"
         width: parent.width / 12
         height: parent.height / 12
         x: (zmqClient.robot_pose_y+ 1.500) * parent.width / 3.000 - width / 2

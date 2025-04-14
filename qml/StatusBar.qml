@@ -64,7 +64,7 @@ Item {
                 width: statusBar.width / 7
                 Image{
                     id: hb_icon
-                    source: "../res/heartbeat.svg"
+                    source: "../res/icons/heartbeat.svg"
                     height: parent.height * 0.8
                     width: height
                     anchors.leftMargin: parent.height / 10
@@ -103,7 +103,7 @@ Item {
                 width: statusBar.height * 2
                 Image{
                     id: power_icon
-                    source: "../res/power.svg"
+                    source: "../res/icons/power.svg"
                     height: parent.height * 0.8
                     width: height
                     anchors.left: parent.left
@@ -119,7 +119,7 @@ Item {
                 }
                 Image{
                     id: power_status_icon
-                    source: getPowerStatus() ? "../res/tick.svg" : "../res/cross.svg"
+                    source: getPowerStatus() ? "../res/icons/tick.svg" : "../res/icons/cross.svg"
                     height: parent.height * 0.8
                     width: height
                     anchors.left: power_icon.right
@@ -152,7 +152,7 @@ Item {
                 width: statusBar.height * 2
                 Image{
                     id: stm_icon
-                    source: "../res/stm.png"
+                    source: "../res/icons/stm.png"
                     height: parent.height * 0.8
                     width: height
                     anchors.left: parent.left
@@ -168,7 +168,7 @@ Item {
                 }
                 Image{
                     id: stm_status_icon
-                    source: getStmStatus() ? "../res/tick.svg" : "../res/cross.svg"
+                    source: getStmStatus() ? "../res/icons/tick.svg" : "../res/icons/cross.svg"
                     height: parent.height * 0.8
                     width: height
                     anchors.left: stm_icon.right
@@ -200,7 +200,7 @@ Item {
                 width: statusBar.height * 2
                 Image{
                     id: fpga_icon
-                    source: "../res/fpga.png"
+                    source: "../res/icons/fpga.png"
                     height: parent.height * 0.8
                     width: height
                     anchors.left: parent.left
@@ -216,7 +216,7 @@ Item {
                 }
                 Image{
                     id: fpga_status_icon
-                    source: getFPGAStatus() ? "../res/tick.svg" : "../res/cross.svg"
+                    source: getFPGAStatus() ? "../res/icons/tick.svg" : "../res/icons/cross.svg"
                     height: parent.height * 0.8
                     width: height
                     anchors.left: fpga_icon.right
@@ -248,7 +248,7 @@ Item {
                 width: statusBar.height * 2
                 Image{
                     id: odrv_icon
-                    source: "../res/odrv.png"
+                    source: "../res/icons/odrv.png"
                     height: parent.height * 0.8
                     width: height
                     anchors.left: parent.left
@@ -264,7 +264,7 @@ Item {
                 }
                 Image{
                     id: odrv_status_icon
-                    source: getOdrvStatus() ? "../res/tick.svg" : "../res/cross.svg"
+                    source: getOdrvStatus() ? "../res/icons/tick.svg" : "../res/icons/cross.svg"
                     height: parent.height * 0.8
                     width: height
                     anchors.leftMargin: parent.height / 4
@@ -296,7 +296,7 @@ Item {
                 width: statusBar.height * 2
                 Image{
                     id: lidar_icon
-                    source: "../res/lidar.png"
+                    source: "../res/icons/lidar.png"
                     height: parent.height * 0.8
                     width: height
                     anchors.left: parent.left
@@ -305,7 +305,7 @@ Item {
                 }
                 Image{
                     id: lidar_status_icon
-                    source: getLidarStatus() ? "../res/tick.svg" : "../res/cross.svg"
+                    source: getLidarStatus() ? "../res/icons/tick.svg" : "../res/icons/cross.svg"
                     height: parent.height * 0.8
                     width: height
                     anchors.leftMargin: parent.height / 4
@@ -337,7 +337,7 @@ Item {
                 width: statusBar.height * 2
                 Image{
                     id: vision_icon
-                    source: "../res/vision.svg"
+                    source: "../res/icons/vision.svg"
                     height: parent.height * 0.8
                     width: height
                     anchors.left: parent.left
@@ -352,7 +352,7 @@ Item {
                 }
                 Image{
                     id: vision_status_icon
-                    source: getVisionStatus() ? "../res/tick.svg" : "../res/cross.svg"
+                    source: getVisionStatus() ? "../res/icons/tick.svg" : "../res/icons/cross.svg"
                     height: parent.height * 0.8
                     width: height
                     anchors.leftMargin: parent.height / 4

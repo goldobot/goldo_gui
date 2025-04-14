@@ -3,7 +3,7 @@ import QtQuick.Controls 2.4
 
 Page {    
     Image {
-        source: "../res/goldo_detect.png"
+        source: "../res/background/goldo_detect.png"
         anchors.fill : parent
     }
 
