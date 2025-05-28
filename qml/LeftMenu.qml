@@ -86,7 +86,7 @@ Item {
 
                 Label{
                     color: "white"
-                    text: "Control"
+                    text: "Pneuma"
                     font.pixelSize: (leftMenuBar.width / 6) * 0.8
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -108,7 +108,7 @@ Item {
 
                 Label{
                     color: "white"
-                    text: "Status"
+                    text: "Control"
                     font.pixelSize: (leftMenuBar.width / 6) * 0.8
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -130,7 +130,7 @@ Item {
 
                 Label{
                     color: "white"
-                    text: "Vision"
+                    text: "Status"
                     font.pixelSize: (leftMenuBar.width / 6) * 0.8
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter

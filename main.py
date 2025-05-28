@@ -4,7 +4,6 @@ import argparse
 import sys, signal
 from PyQt5 import QtCore, QtGui, QtQml
 from zmq_client import ZmqClient
-from camera_item import CameraItem
 
 parser = argparse.ArgumentParser(description='Robot control GUI')
 parser.add_argument('--windowed', dest='windowed', action='store_true', help='Run GUI in windowed mode')
@@ -18,9 +17,7 @@ if __name__ == "__main__":
     app = QtGui.QGuiApplication(sys.argv)
     if args. windowed == False:
         app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-        app.setOverrideCursor(QtCore.Qt.BlankCursor);
-
-    QtQml.qmlRegisterType(CameraItem, "goldo", 1, 0, "CameraItem")
+        app.setOverrideCursor(QtCore.Qt.BlankCursor)
     
     engine = QtQml.QQmlApplicationEngine()
     zmq_client = ZmqClient()

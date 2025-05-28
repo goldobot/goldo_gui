@@ -34,11 +34,11 @@ ApplicationWindow {
       }
       StratPage {
       }
+      PneumaticPage {
+      }
       ControlPage {
       }
       StatusPage {
-      }
-      CameraDisplayPage {
       }
       ScorePage {        
       }

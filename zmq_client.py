@@ -219,24 +219,29 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self.publishTopic('nucleo/in/propulsion/calibrate_odrive', msg)
 
     @pyqtSlot()
-    def empty_carrousel(self):
+    def compressor_on(self):
         msg = Int32Value(value=0)
-        self.publishTopic('robot/sequence/empty_carousel/execute', msg)
+        self.publishTopic('robot/sequence/start_compressor/execute', msg)
 
     @pyqtSlot()
-    def test_turbines(self):
+    def compressor_off(self):
         msg = Int32Value(value=0)
-        self.publishTopic('robot/sequence/test_turbines/execute', msg)
+        self.publishTopic('robot/sequence/stop_compressor/execute', msg)
+
+    @pyqtSlot()
+    def purge(self):
+        msg = Int32Value(value=0)
+        self.publishTopic('robot/sequence/purge/execute', msg)
 
     @pyqtSlot(int)
-    def center_slot(self, value):
+    def valve_on(self, value):
         msg = Int32Value(value=0)
-        self.publishTopic('robot/sequence/center_slot{}/execute'.format(value), msg)
+        self.publishTopic('robot/sequence/valve_{}_on/execute'.format(value), msg)
 
-    @pyqtSlot()
-    def check_actionneurs(self):
+    @pyqtSlot(int)
+    def valve_off(self, value):
         msg = Int32Value(value=0)
-        self.publishTopic('robot/sequence/check_up_actionneurs/execute', msg)
+        self.publishTopic('robot/sequence/valve_{}_off/execute'.format(value), msg)
 
     @pyqtSlot()
     def change_zone(self):
