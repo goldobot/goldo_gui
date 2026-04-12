@@ -203,15 +203,6 @@ Page {
         }
     }
 
-    function isStartPlateUndefined(){
-        if (zmqClient.start_zone_selected == 0) {
-            return true
-        }
-        else{
-            return false
-        }
-    }
-
     //Title bar, also displays warnings
     Rectangle{
         anchors.fill: parent
@@ -226,7 +217,7 @@ Page {
 
             Rectangle {
                 id: rectangle1
-                color: isSideUndefined() || isStartPlateUndefined() ? "#FF0000" : "#222222"
+                color: isSideUndefined() ? "#FF0000" : "#222222"
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
@@ -235,7 +226,7 @@ Page {
                 Layout.column: 0
                 Label {
                     color: "white"
-                    visible: isSideUndefined() || isStartPlateUndefined() ? true : false
+                    visible: isSideUndefined() ? true : false
                     text: "Configuration"
                     font.pixelSize: 44
                     horizontalAlignment: Text.AlignHCenter
@@ -255,19 +246,8 @@ Page {
                     anchors.bottom: parent.bottom
                 }
                 Label {
-                    id: warningStart
                     color: "white"
-                    visible: isStartPlateUndefined() ? true : false
-                    text: "Warning : Start zone is not selected"
-                    font.pixelSize: 24
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: warningSide.top
-                }
-                Label {
-                    color: "white"
-                    visible: isSideUndefined() || isStartPlateUndefined() ? false : true
+                    visible: isSideUndefined() ? false : true
                     text: "Configuration"
                     font.pixelSize: 64
                     horizontalAlignment: Text.AlignHCenter

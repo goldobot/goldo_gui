@@ -85,7 +85,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
     cameraDetectionsReceived = pyqtSignal(object)
     # Others
     notifyScreenSelected = pyqtSignal()
-    notifyPlateSelected = pyqtSignal()
     notifyIpAddress = pyqtSignal()
 
     def _read_ip(self):
@@ -120,8 +119,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def _send_side(self):
         msg = Int32Value(value=self._side)
         self.publishTopic('gui/out/side', msg)
-        msg = Int32Value(value=self._start_zone_selected)
-        self.publishTopic('gui/out/start_zone', msg)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -166,7 +163,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
         self._score = 0
         self._match_timer = 0
         self._match_state = 0
-        self._match_start_zone = 0
 
         # Odrive variables
         self._odrv_sync = False
@@ -197,7 +193,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
 
         # Others
         self._gui_screen_selected = 0
-        self._start_zone_selected = 0
         self._ip_address = "127.0.0.1"
         self._ip_timer = QTimer(self)
         self._ip_timer.timeout.connect(self._read_ip)
@@ -252,21 +247,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def selectScreen(self, value):
         self._gui_screen_selected = value
         self.notifyScreenSelected.emit()
-
-    @pyqtSlot(int)
-    def selectPlate(self, value):
-        if value == self._start_zone_selected:
-            return
-        elif self._side == 2 and value % 2 == 0 and value != 0:
-            self._start_zone_selected = value
-        elif self._side == 1 and value % 2 == 1:
-            self._start_zone_selected = value
-        elif value == 0:
-            self._start_zone_selected = value
-        else:
-            return
-        
-        self.notifyPlateSelected.emit()
 
     def publishTopic(self, topic, msg):
         self._pub_socket.send_multipart(self._encodeTopic(topic, msg))
@@ -467,7 +447,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def setSide(self, side):
         if self._side != side:
             self._side = side
-            self.selectPlate(0)
             self.notifySide.emit()
             msg = Int32Value(value=side)
             self.publishTopic('gui/out/side', msg)
@@ -580,10 +559,6 @@ class ZmqClient(QObject, ZmqCodecMixin):
     @pyqtProperty(int, notify=notifyScreenSelected)
     def gui_screen_selected(self):
         return self._gui_screen_selected
-
-    @pyqtProperty(int, notify=notifyPlateSelected)
-    def start_zone_selected(self):
-        return self._start_zone_selected
 
     @pyqtProperty(str, notify=notifyIpAddress)
     def ip_address(self):
