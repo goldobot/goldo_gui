@@ -17,7 +17,7 @@ if __name__ == "__main__":
     app = QtGui.QGuiApplication(sys.argv)
     if args. windowed == False:
         app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-        app.setOverrideCursor(QtCore.Qt.BlankCursor)
+        app.setOverrideCursor(QtCore.Qt.ArrowCursor)
     
     engine = QtQml.QQmlApplicationEngine()
     zmq_client = ZmqClient()
