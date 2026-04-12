@@ -460,10 +460,14 @@ class ZmqClient(QObject, ZmqCodecMixin):
     def setSide(self, side):
         if self._side != side:
             self._side = side
-            if self.side == Blue:
-                self.selectPlate(1)
-            elif self.side == Yellow:
+            if self._side == 1: # YELLOW
+                print ("SIDE 1 YELLOW")
+                print ("SELECT START POS 2")
                 self.selectPlate(2)
+            elif self._side == 2: # BLUE
+                print ("SIDE 2 BLUE")
+                print ("SELECT START POS 1")
+                self.selectPlate(1)
             self.notifySide.emit()
             msg = Int32Value(value=side)
             self.publishTopic('gui/out/side', msg)
